@@ -1,0 +1,96 @@
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Habit } from '../types/Habit';
+
+interface HabitItemProps {
+  habit: Habit;
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
+}
+
+export default function HabitItem({ habit, onToggle, onDelete }: HabitItemProps) {
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.checkButton}
+        onPress={() => onToggle(habit.id)}
+      >
+        <Text style={styles.checkIcon}>{habit.completedToday ? '✅' : '⬜'}</Text>
+      </TouchableOpacity>
+
+      <View style={styles.info}>
+        <Text
+          style={[
+            styles.name,
+            habit.completedToday && styles.nameCompleted,
+          ]}
+        >
+          {habit.name}
+        </Text>
+
+        {habit.description ? (
+          <Text style={styles.description}>{habit.description}</Text>
+        ) : null}
+
+        {/* TODO Q2a — exibir etiqueta de frequency com cor correspondente */}
+
+        <Text style={styles.streak}>🔥 {habit.streak} dia(s) seguidos</Text>
+      </View>
+
+      <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(habit.id)}>
+        <Text style={styles.deleteText}>🗑</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    padding: 12,
+    marginHorizontal: 16,
+    marginVertical: 6,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  checkButton: {
+    marginRight: 12,
+  },
+  checkIcon: {
+    fontSize: 24,
+  },
+  info: {
+    flex: 1,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#212121',
+  },
+  nameCompleted: {
+    textDecorationLine: 'line-through',
+    color: '#9E9E9E',
+  },
+  description: {
+    fontSize: 13,
+    color: '#757575',
+    marginTop: 2,
+  },
+  streak: {
+    fontSize: 12,
+    color: '#FF7043',
+    marginTop: 4,
+  },
+  deleteButton: {
+    paddingLeft: 8,
+  },
+  deleteText: {
+    fontSize: 20,
+  },
+});
