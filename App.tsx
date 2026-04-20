@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Button,
   Image,
   Modal,
   Platform,
@@ -14,6 +15,7 @@ import {
   View,
 } from 'react-native';
 import HabitList from './src/components/HabitList';
+import StatsScreen from './src/components/StatsScreen';
 import { Habit } from './src/types/Habit';
 import { createHabit, fetchHabits, toggleHabit, deleteHabit } from './src/utils/handle-api';
 import { globalStyles } from './src/styles/global';
@@ -26,6 +28,7 @@ export default function App() {
   const [filter, setFilter] = useState<'all' | 'completed' | 'pending'>('all');
   
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isStatsVisible, setIsStatsVisible] = useState(false);
   const [newHabitName, setNewHabitName] = useState('');
   const [newHabitDescription, setNewHabitDescription] = useState('');
   const [frequency, setFrequency] = useState<'diário' | 'semanal' | 'mensal'>('diário');
@@ -127,7 +130,14 @@ export default function App() {
       )}
 
       {/* TODO Q5b — adicionar Button "Ver Estatísticas" e Modal do StatsScreen */}
-      
+      <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+        <Button title="Ver Estatísticas" onPress={() => setIsStatsVisible(true)} color="#5C6BC0" />
+      </View>
+
+      <Modal visible={isStatsVisible} animationType="slide">
+        <StatsScreen onClose={() => setIsStatsVisible(false)} />
+      </Modal>
+
       {/* Modal de Criação de Hábito */}
       <Modal visible={isModalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalOverlay}>
