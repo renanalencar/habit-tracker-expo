@@ -12,6 +12,7 @@ import {
 import HabitList from './src/components/HabitList';
 import { Habit } from './src/types/Habit';
 import { fetchHabits, toggleHabit, deleteHabit } from './src/utils/handle-api';
+import { globalStyles } from './src/styles/global';
 
 export default function App() {
   const [habits, setHabits] = useState<Habit[]>([]);
@@ -58,7 +59,7 @@ export default function App() {
 
       {/* TODO Q2c — exibir ActivityIndicator quando loading for true */}
       {loading ? (
-        <ActivityIndicator size="large" color="#5C6BC0" style={styles.loader} />
+        <ActivityIndicator size="large" color={globalStyles.primaryColor} style={styles.loader} />
       ) : (
         <HabitList
           habits={habits}
@@ -75,12 +76,12 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: globalStyles.backgroundColor,
   },
   header: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#5C6BC0',
+    backgroundColor: globalStyles.primaryColor,
   },
   title: {
     fontSize: 22,
