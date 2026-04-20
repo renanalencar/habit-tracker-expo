@@ -51,7 +51,16 @@ export default function App() {
     >
       <View style={styles.header}>
         {/* TODO Q2b — exibir Image ou Text com renderização condicional */}
-        <Text style={styles.title}>Rastreador de Hábitos</Text>
+        {logoError ? (
+          <Text style={styles.title}>Rastreador de Hábitos</Text>
+        ) : (
+          <Image
+            source={require('./src/assets/habit-tracker-banner.png')}
+            style={styles.logo}
+            resizeMode="cover"
+            onError={() => setLogoError(true)}
+          />
+        )}
         <Text style={styles.subtitle}>{habits.length} hábito(s) cadastrado(s)</Text>
       </View>
 
@@ -79,7 +88,6 @@ const styles = StyleSheet.create({
     backgroundColor: globalStyles.backgroundColor,
   },
   header: {
-    paddingHorizontal: 16,
     paddingVertical: 12,
     backgroundColor: globalStyles.primaryColor,
   },
@@ -87,11 +95,17 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: '#FFFFFF',
+    paddingHorizontal: 16,
+  },
+  logo: {
+    width: '100%',
+    height: 120,
   },
   subtitle: {
     fontSize: 14,
     color: '#C5CAE9',
     marginTop: 2,
+    paddingHorizontal: 16,
   },
   loader: {
     flex: 1,

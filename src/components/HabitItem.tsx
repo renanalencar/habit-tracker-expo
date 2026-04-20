@@ -33,6 +33,25 @@ export default function HabitItem({ habit, onToggle, onDelete }: HabitItemProps)
         ) : null}
 
         {/* TODO Q2a — exibir etiqueta de frequency com cor correspondente */}
+        <View
+          style={[
+            styles.frequencyTag,
+            habit.frequency === 'diário' && { backgroundColor: '#C8E6C9' },
+            habit.frequency === 'semanal' && { backgroundColor: '#BBDEFB' },
+            habit.frequency === 'mensal' && { backgroundColor: '#FFE0B2' },
+          ]}
+        >
+          <Text
+            style={[
+              styles.frequencyText,
+              habit.frequency === 'diário' && { color: '#2E7D32' },
+              habit.frequency === 'semanal' && { color: '#1565C0' },
+              habit.frequency === 'mensal' && { color: '#E65100' },
+            ]}
+          >
+            {habit.frequency}
+          </Text>
+        </View>
 
         <Text style={styles.streak}>🔥 {habit.streak} dia(s) seguidos</Text>
       </View>
@@ -81,6 +100,18 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#757575',
     marginTop: 2,
+  },
+  frequencyTag: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    marginTop: 6,
+  },
+  frequencyText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    textTransform: 'capitalize',
   },
   streak: {
     fontSize: 12,
