@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { SectionList, StyleSheet, Text, View } from 'react-native';
 import { Habit } from '../types/Habit';
 import HabitItem from './HabitItem';
 
@@ -19,12 +19,25 @@ export default function HabitList({ habits, onToggle, onDelete }: HabitListProps
     );
   }
 
+  const sections = [
+    { title: 'Concluídos hoje', data: habits.filter(h => h.completedToday) },
+    { title: 'Pendentes', data: habits.filter(h => !h.completedToday) },
+  ];
+
   return (
-    <FlatList
-      data={habits}
+    <SectionList
+      sections={sections}
       keyExtractor={item => item.id}
       renderItem={({ item }) => (
         <HabitItem habit={item} onToggle={onToggle} onDelete={onDelete} />
+      )}
+      renderSectionHeader={({ section: { title } }) => (
+        <Text style={styles.sectionHeader}>{title}</Text>
+      )}
+      renderSectionFooter={({ section }) => (
+        section.data.length === 0 ? (
+          <Text style={styles.emptyCategoryText}>Nenhum hábito nesta categoria.</Text>
+        ) : null
       )}
       contentContainerStyle={styles.list}
     />
@@ -34,6 +47,16 @@ export default function HabitList({ habits, onToggle, onDelete }: HabitListProps
 const styles = StyleSheet.create({
   list: {
     paddingVertical: 8,
+  },
+  sectionHeader: {
+    backgroundColor: '#EEEEEE',
+    fontWeight: 'bold',
+    padding: 12,
+  },
+  emptyCategoryText: {
+    padding: 12,
+    color: '#757575',
+    fontStyle: 'italic',
   },
   emptyContainer: {
     flex: 1,
