@@ -16,16 +16,22 @@ import {
 } from 'react-native';
 import HabitList from './src/components/HabitList';
 import StatsScreen from './src/components/StatsScreen';
-import { Habit } from './src/types/Habit';
-import { createHabit, fetchHabits, toggleHabit, deleteHabit } from './src/utils/handle-api';
+import { useHabitStore } from './src/store/useHabitStore';
 import { globalStyles } from './src/styles/global';
 
 export default function App() {
-  const [habits, setHabits] = useState<Habit[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const {
+    habits,
+    loading,
+    filter,
+    setFilter,
+    loadHabits,
+    toggleHabit,
+    deleteHabit,
+    createHabit
+  } = useHabitStore();
+
   const [logoError, setLogoError] = useState<boolean>(false);
-  
-  const [filter, setFilter] = useState<'all' | 'completed' | 'pending'>('all');
   
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isStatsVisible, setIsStatsVisible] = useState(false);
@@ -37,33 +43,13 @@ export default function App() {
     loadHabits();
   }, []);
 
-  const loadHabits = async () => {
-    setLoading(true);
-    const data = await fetchHabits();
-    setHabits(data);
-    setLoading(false);
-  };
-
-  const handleToggle = async (id: string) => {
-    const updated = await toggleHabit(id);
-    setHabits(prev =>
-      prev.map(h => (h.id === id ? { ...h, completedToday: updated.completedToday } : h))
-    );
-  };
-
-  const handleDelete = async (id: string) => {
-    await deleteHabit(id);
-    setHabits(prev => prev.filter(h => h.id !== id));
-  };
-
   const handleCreateHabit = async () => {
     if (!newHabitName.trim()) return;
-    const created = await createHabit({
+    await createHabit({
       name: newHabitName,
       description: newHabitDescription,
       frequency: frequency,
     });
-    setHabits(prev => [...prev, created]);
     setIsModalVisible(false);
     setNewHabitName('');
     setNewHabitDescription('');
@@ -124,8 +110,8 @@ export default function App() {
       ) : (
         <HabitList
           habits={filteredHabits}
-          onToggle={handleToggle}
-          onDelete={handleDelete}
+          onToggle={toggleHabit}
+          onDelete={deleteHabit}
         />
       )}
 

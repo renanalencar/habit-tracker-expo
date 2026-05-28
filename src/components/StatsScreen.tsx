@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { useHabitStore } from '../store/useHabitStore';
 import { globalStyles } from '../styles/global';
 
 interface StatsScreenProps {
@@ -7,6 +8,16 @@ interface StatsScreenProps {
 }
 
 export default function StatsScreen({ onClose }: StatsScreenProps) {
+  const { habits } = useHabitStore();
+
+  const totalHabits = habits.length;
+  const completedToday = habits.filter(h => h.completedToday).length;
+  const maxStreak = habits.length > 0 ? Math.max(...habits.map(h => h.streak || 0)) : 0;
+
+  const dailyHabits = habits.filter(h => h.frequency === 'diário').length;
+  const weeklyHabits = habits.filter(h => h.frequency === 'semanal').length;
+  const monthlyHabits = habits.filter(h => h.frequency === 'mensal').length;
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Image 
@@ -19,18 +30,18 @@ export default function StatsScreen({ onClose }: StatsScreenProps) {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Resumo Geral</Text>
-        <Text style={styles.metric}>Total de Hábitos: 12</Text>
-        <Text style={styles.metric}>Concluídos Hoje: 5</Text>
-        <Text style={styles.metric}>Sequência Atual: 14 dias</Text>
+        <Text style={styles.metric}>Total de Hábitos: {totalHabits}</Text>
+        <Text style={styles.metric}>Concluídos Hoje: {completedToday}</Text>
+        <Text style={styles.metric}>Maior Sequência: {maxStreak} dias</Text>
       </View>
 
       <View style={styles.separator} />
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Hábitos por Frequência</Text>
-        <Text style={styles.metric}>Diário: 7</Text>
-        <Text style={styles.metric}>Semanal: 3</Text>
-        <Text style={styles.metric}>Mensal: 2</Text>
+        <Text style={styles.metric}>Diário: {dailyHabits}</Text>
+        <Text style={styles.metric}>Semanal: {weeklyHabits}</Text>
+        <Text style={styles.metric}>Mensal: {monthlyHabits}</Text>
       </View>
 
       <TouchableOpacity style={styles.closeButton} onPress={onClose}>
