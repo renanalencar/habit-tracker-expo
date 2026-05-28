@@ -11,6 +11,7 @@ Aplicativo de rastreamento de hábitos diários desenvolvido com **Expo + TypeSc
 ```
 habit-tracker-expo/
 ├── App.tsx
+├── backend/        <-- Submódulo do backend
 ├── src/
 │   ├── components/
 │   │   ├── HabitItem.tsx
@@ -25,6 +26,19 @@ habit-tracker-expo/
 ```
 
 ## Como executar
+
+Após realizar o clone do projeto, é necessário baixar o submódulo do backend. Se você já fez o clone do projeto sem o submódulo, execute o seguinte comando na raiz do projeto:
+
+```bash
+git submodule update --init --recursive
+```
+
+Alternativamente, você pode clonar o projeto já com os submódulos usando:
+```bash
+git clone --recurse-submodules <URL_DO_REPOSITORIO>
+```
+
+Em seguida, instale as dependências e inicie o app:
 
 ```bash
 npm install
