@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import HabitList from '../../src/components/HabitList';
 import { useHabitStore } from '../../src/store/useHabitStore';
+import { useAuthStore } from '../../src/store/useAuthStore';
 import { globalStyles } from '../../src/styles/global';
 
 export default function HomeScreen() {
@@ -29,6 +30,8 @@ export default function HomeScreen() {
     createHabit
   } = useHabitStore();
 
+  const { token } = useAuthStore();
+
   const [logoError, setLogoError] = useState<boolean>(false);
   
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -38,7 +41,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     loadHabits();
-  }, []);
+  }, [token]);
 
   const handleCreateHabit = async () => {
     if (!newHabitName.trim()) return;
