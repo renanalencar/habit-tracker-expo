@@ -3,11 +3,7 @@ import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity } from 'rea
 import { useHabitStore } from '../store/useHabitStore';
 import { globalStyles } from '../styles/global';
 
-interface StatsScreenProps {
-  onClose: () => void;
-}
-
-export default function StatsScreen({ onClose }: StatsScreenProps) {
+export default function StatsScreen() {
   const { habits } = useHabitStore();
 
   const totalHabits = habits.length;
@@ -44,9 +40,6 @@ export default function StatsScreen({ onClose }: StatsScreenProps) {
         <Text style={styles.metric}>Mensal: {monthlyHabits}</Text>
       </View>
 
-      <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-        <Text style={styles.closeButtonText}>Fechar</Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -100,17 +93,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#E0E0E0',
     width: '80%',
     marginVertical: 10,
-  },
-  closeButton: {
-    marginTop: 20,
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    backgroundColor: '#F44336',
-    borderRadius: 8,
-  },
-  closeButtonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });

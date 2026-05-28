@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Habit } from '../types/Habit';
 
 interface HabitItemProps {
@@ -9,6 +10,8 @@ interface HabitItemProps {
 }
 
 export default function HabitItem({ habit, onToggle, onDelete }: HabitItemProps) {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -18,7 +21,10 @@ export default function HabitItem({ habit, onToggle, onDelete }: HabitItemProps)
         <Text style={styles.checkIcon}>{habit.completedToday ? '✅' : '⬜'}</Text>
       </TouchableOpacity>
 
-      <View style={styles.info}>
+      <TouchableOpacity 
+        style={styles.info}
+        onPress={() => router.push(`/habit/${habit.id}`)}
+      >
         <Text
           style={[
             styles.name,
@@ -54,7 +60,7 @@ export default function HabitItem({ habit, onToggle, onDelete }: HabitItemProps)
         </View>
 
         <Text style={styles.streak}>🔥 {habit.streak} dia(s) seguidos</Text>
-      </View>
+      </TouchableOpacity>
 
       <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(habit.id)}>
         <Text style={styles.deleteText}>🗑</Text>

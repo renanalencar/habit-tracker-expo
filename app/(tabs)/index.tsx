@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  Button,
   Image,
   Modal,
   Platform,
@@ -14,12 +13,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import HabitList from './src/components/HabitList';
-import StatsScreen from './src/components/StatsScreen';
-import { useHabitStore } from './src/store/useHabitStore';
-import { globalStyles } from './src/styles/global';
+import HabitList from '../../src/components/HabitList';
+import { useHabitStore } from '../../src/store/useHabitStore';
+import { globalStyles } from '../../src/styles/global';
 
-export default function App() {
+export default function HomeScreen() {
   const {
     habits,
     loading,
@@ -34,7 +32,6 @@ export default function App() {
   const [logoError, setLogoError] = useState<boolean>(false);
   
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isStatsVisible, setIsStatsVisible] = useState(false);
   const [newHabitName, setNewHabitName] = useState('');
   const [newHabitDescription, setNewHabitDescription] = useState('');
   const [frequency, setFrequency] = useState<'diário' | 'semanal' | 'mensal'>('diário');
@@ -70,12 +67,11 @@ export default function App() {
       ]}
     >
       <View style={styles.header}>
-        {/* TODO Q2b — exibir Image ou Text com renderização condicional */}
         {logoError ? (
           <Text style={styles.title}>Rastreador de Hábitos</Text>
         ) : (
           <Image
-            source={require('./src/assets/habit-tracker-banner.png')}
+            source={require('../../src/assets/habit-tracker-banner.png')}
             style={styles.logo}
             resizeMode="cover"
             onError={() => setLogoError(true)}
@@ -87,7 +83,6 @@ export default function App() {
         </TouchableOpacity>
       </View>
 
-      {/* TODO Q4b — adicionar botões de filtro (Todos / Concluídos / Pendentes) */}
       <View style={styles.filterContainer}>
         {(['all', 'completed', 'pending'] as const).map(f => {
           const isActive = filter === f;
@@ -104,7 +99,6 @@ export default function App() {
         })}
       </View>
 
-      {/* TODO Q2c — exibir ActivityIndicator quando loading for true */}
       {loading ? (
         <ActivityIndicator size="large" color={globalStyles.primaryColor} style={styles.loader} />
       ) : (
@@ -114,15 +108,6 @@ export default function App() {
           onDelete={deleteHabit}
         />
       )}
-
-      {/* TODO Q5b — adicionar Button "Ver Estatísticas" e Modal do StatsScreen */}
-      <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-        <Button title="Ver Estatísticas" onPress={() => setIsStatsVisible(true)} color="#5C6BC0" />
-      </View>
-
-      <Modal visible={isStatsVisible} animationType="slide">
-        <StatsScreen onClose={() => setIsStatsVisible(false)} />
-      </Modal>
 
       {/* Modal de Criação de Hábito */}
       <Modal visible={isModalVisible} animationType="slide" transparent={true}>
