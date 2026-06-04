@@ -3,7 +3,7 @@ import { useAuthStore } from '../store/useAuthStore';
 
 // Ajuste o IP ou porta conforme necessário para testes em dispositivos físicos (ex: http://192.168.x.x:3000/api)
 // Para emuladores Android usando Expo: use 'http://10.0.2.2:3000/api' se localhost não funcionar
-const API_URL = 'http://localhost:3000/api';
+const API_URL = process.env.API_URL || 'http://localhost:3000/api';
 
 function getHeaders(): HeadersInit {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
