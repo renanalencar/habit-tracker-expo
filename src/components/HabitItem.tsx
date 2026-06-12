@@ -1,7 +1,13 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useRouter } from 'expo-router';
-import { Habit } from '../types/Habit';
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Habit } from "../types/Habit";
+import {
+  Checkbox,
+  CheckboxIndicator,
+  CheckboxIcon,
+} from "@/components/ui/checkbox";
+import { CheckIcon } from "@/components/ui/icon";
 
 interface HabitItemProps {
   habit: Habit;
@@ -9,7 +15,11 @@ interface HabitItemProps {
   onDelete: (id: string) => void;
 }
 
-export default function HabitItem({ habit, onToggle, onDelete }: HabitItemProps) {
+export default function HabitItem({
+  habit,
+  onToggle,
+  onDelete,
+}: HabitItemProps) {
   const router = useRouter();
 
   return (
@@ -18,18 +28,20 @@ export default function HabitItem({ habit, onToggle, onDelete }: HabitItemProps)
         style={styles.checkButton}
         onPress={() => onToggle(habit.id)}
       >
-        <Text style={styles.checkIcon}>{habit.completedToday ? '✅' : '⬜'}</Text>
+        {/* <Text style={styles.checkIcon}>{habit.completedToday ? '✅' : '⬜'}</Text> */}
+        <Checkbox isDisabled={false} isInvalid={false} size="md" value="">
+          <CheckboxIndicator>
+            <CheckboxIcon as={CheckIcon} />
+          </CheckboxIndicator>
+        </Checkbox>
       </TouchableOpacity>
 
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.info}
         onPress={() => router.push(`/habit/${habit.id}`)}
       >
         <Text
-          style={[
-            styles.name,
-            habit.completedToday && styles.nameCompleted,
-          ]}
+          style={[styles.name, habit.completedToday && styles.nameCompleted]}
         >
           {habit.name}
         </Text>
@@ -42,17 +54,17 @@ export default function HabitItem({ habit, onToggle, onDelete }: HabitItemProps)
         <View
           style={[
             styles.frequencyTag,
-            habit.frequency === 'diário' && { backgroundColor: '#C8E6C9' },
-            habit.frequency === 'semanal' && { backgroundColor: '#BBDEFB' },
-            habit.frequency === 'mensal' && { backgroundColor: '#FFE0B2' },
+            habit.frequency === "diário" && { backgroundColor: "#C8E6C9" },
+            habit.frequency === "semanal" && { backgroundColor: "#BBDEFB" },
+            habit.frequency === "mensal" && { backgroundColor: "#FFE0B2" },
           ]}
         >
           <Text
             style={[
               styles.frequencyText,
-              habit.frequency === 'diário' && { color: '#2E7D32' },
-              habit.frequency === 'semanal' && { color: '#1565C0' },
-              habit.frequency === 'mensal' && { color: '#E65100' },
+              habit.frequency === "diário" && { color: "#2E7D32" },
+              habit.frequency === "semanal" && { color: "#1565C0" },
+              habit.frequency === "mensal" && { color: "#E65100" },
             ]}
           >
             {habit.frequency}
@@ -62,7 +74,10 @@ export default function HabitItem({ habit, onToggle, onDelete }: HabitItemProps)
         <Text style={styles.streak}>🔥 {habit.streak} dia(s) seguidos</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(habit.id)}>
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() => onDelete(habit.id)}
+      >
         <Text style={styles.deleteText}>🗑</Text>
       </TouchableOpacity>
     </View>
@@ -71,15 +86,15 @@ export default function HabitItem({ habit, onToggle, onDelete }: HabitItemProps)
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
     borderRadius: 10,
     padding: 12,
     marginHorizontal: 16,
     marginVertical: 6,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.08,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
@@ -95,20 +110,20 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#212121',
+    fontWeight: "600",
+    color: "#212121",
   },
   nameCompleted: {
-    textDecorationLine: 'line-through',
-    color: '#9E9E9E',
+    textDecorationLine: "line-through",
+    color: "#9E9E9E",
   },
   description: {
     fontSize: 13,
-    color: '#757575',
+    color: "#757575",
     marginTop: 2,
   },
   frequencyTag: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 4,
@@ -116,12 +131,12 @@ const styles = StyleSheet.create({
   },
   frequencyText: {
     fontSize: 12,
-    fontWeight: 'bold',
-    textTransform: 'capitalize',
+    fontWeight: "bold",
+    textTransform: "capitalize",
   },
   streak: {
     fontSize: 12,
-    color: '#FF7043',
+    color: "#FF7043",
     marginTop: 4,
   },
   deleteButton: {
