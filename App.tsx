@@ -107,6 +107,15 @@ const styles = StyleSheet.create({
     color: '#e53935',
     textAlign: 'center',
   },
+  conteudo: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
+  },
+  erro: {
+    color: '#e53935',
+    textAlign: 'center',
+  },
   titulo: {
     fontSize: 20,
     fontWeight: '600',
