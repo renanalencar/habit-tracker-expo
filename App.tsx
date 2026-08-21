@@ -69,7 +69,7 @@ function renderizarConteudo(estado: EstadoTela<Habito>) {
           categoria={estado.dados.categoria}
           status={estado.dados.status}
           destacado
-          onPress={() => {}}
+          onPress={() => { }}
         />
       );
     default: {
