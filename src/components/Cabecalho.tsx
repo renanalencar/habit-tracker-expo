@@ -1,11 +1,3 @@
-// Ex. 3 — versão corrigida do componente `Cabecalho`.
-// Erros do enunciado e as correções aplicadas:
-//   1. `Text` não estava importado de 'react-native'.
-//   2. O texto "Hábitos de hoje" estava solto dentro de um `View` — em React Native
-//      todo texto precisa estar dentro de um `<Text>`.
-//   3. `padding: '16px'` — RN usa números (dp), sem unidade: `padding: 16`.
-//   4. `justifyContent: 'space-between'` sozinho não coloca os textos lado a lado:
-//      o eixo principal padrão é `column`, então falta `flexDirection: 'row'`.
 import { StyleSheet, Text, View } from 'react-native';
 
 type CabecalhoProps = {

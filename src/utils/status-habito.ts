@@ -1,12 +1,5 @@
 import type { StatusHabito } from '../types/habito';
 
-/**
- * Ex. 5 — switch exaustivo.
- *
- * O `default` com `never` é o que faz o exercício funcionar: se um novo valor
- * (ex.: 'atrasado') for adicionado a `StatusHabito`, este arquivo passa a dar
- * erro de compilação — o bug aparece no build, não em produção.
- */
 export function corDoStatus(status: StatusHabito): string {
   switch (status) {
     case 'pendente':

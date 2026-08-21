@@ -1,15 +1,3 @@
-/**
- * Atividade 1 — arquivo 3 de 3: a tela do hábito do dia.
- *
- * ⏳ ESTE ARQUIVO DEPENDE DA AULA 2.
- *    Os TODO A1.1 a A1.9 (em `src/types/habito.ts` e `src/services/habitoService.ts`)
- *    são TypeScript puro e você já consegue fazer hoje. Os componentes usados aqui
- *    — View, Text, Pressable, ActivityIndicator, StyleSheet — só são apresentados
- *    na Aula 2. Volte a este arquivo depois dela.
- *
- * Enunciado completo em `exercises.md` da Aula 1.
- */
-
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
@@ -28,18 +16,13 @@ const HABITO_DO_DIA: Habito = {
   criadoEm: '2026-08-01T09:00:00.000Z',
 };
 
-/** Simula a busca do hábito do dia no servidor (Aula 2 ainda não tem API). */
 function buscarHabitoDoDia(): Promise<Habito> {
   return new Promise((resolve) => {
     setTimeout(() => resolve(HABITO_DO_DIA), 1200);
   });
 }
 
-
 export default function App() {
-  // Ex. 6 — um único estado com união discriminada, em vez de três booleanos/nulos
-  // independentes. Estados impossíveis (carregando + erro, sucesso sem dados)
-  // deixam de existir e o `habito!` desaparece.
   const [estado, setEstado] = useState<EstadoTela<Habito>>({ situacao: 'carregando' });
 
   useEffect(() => {
@@ -81,10 +64,8 @@ function renderizarConteudo(estado: EstadoTela<Habito>, setEstado: (estado: Esta
     case 'carregando':
       return <ActivityIndicator size="large" color="#1e88e5" />;
     case 'erro':
-      // Dentro deste case o TypeScript sabe que `mensagem` existe.
       return <Text style={styles.erro}>{estado.mensagem}</Text>;
     case 'sucesso':
-      // E aqui sabe que `dados` existe — sem non-null assertion.
       return (
         <CardHabito
           titulo={estado.dados.titulo}
@@ -131,5 +112,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#333',
   },
-  // TODO A1.14 — os estilos do card, do botão e da mensagem de erro.
+
 });
