@@ -1,3 +1,15 @@
+/**
+ * Atividade 1 — arquivo 3 de 3: a tela do hábito do dia.
+ *
+ * ⏳ ESTE ARQUIVO DEPENDE DA AULA 2.
+ *    Os TODO A1.1 a A1.9 (em `src/types/habito.ts` e `src/services/habitoService.ts`)
+ *    são TypeScript puro e você já consegue fazer hoje. Os componentes usados aqui
+ *    — View, Text, Pressable, ActivityIndicator, StyleSheet — só são apresentados
+ *    na Aula 2. Volte a este arquivo depois dela.
+ *
+ * Enunciado completo em `exercises.md` da Aula 1.
+ */
+
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
@@ -50,7 +62,6 @@ export default function App() {
       <Cabecalho total={5} concluidos={2} />
       <View style={styles.conteudo}>{renderizarConteudo(estado)}</View>
       <StatusBar style="auto" />
-      <Cabecalho />
     </View>
   );
 }
@@ -83,6 +94,7 @@ function renderizarConteudo(estado: EstadoTela<Habito>) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 16,
     backgroundColor: '#fff',
     paddingTop: 56,
   },
@@ -95,4 +107,19 @@ const styles = StyleSheet.create({
     color: '#e53935',
     textAlign: 'center',
   },
+  titulo: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  aviso: {
+    fontSize: 14,
+    color: '#666',
+    lineHeight: 20,
+  },
+  arquivo: {
+    fontWeight: '600',
+    color: '#333',
+  },
+  // TODO A1.14 — os estilos do card, do botão e da mensagem de erro.
 });
