@@ -46,6 +46,7 @@ export default function App() {
       <Cabecalho total={5} concluidos={2} />
       <View style={styles.conteudo}>{renderizarConteudo(estado, setEstado)}</View>
       <StatusBar style="auto" />
+      <Cabecalho />
     </View>
   );
 }
