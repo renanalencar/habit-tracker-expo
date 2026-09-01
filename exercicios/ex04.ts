@@ -16,12 +16,20 @@ import type { Habito } from './ex03';
 //     'carregando'  → nenhum outro campo
 //     'sucesso'     → dados: T
 //     'erro'        → mensagem: string
-export type EstadoTela<T> = never; // ← substitua `never`
+export type EstadoTela<T> =
+  | { tipo: 'carregando' }
+  | { tipo: 'sucesso'; dados: T }
+  | { tipo: 'erro'; mensagem: string };
 
 // TODO 4.2 — complete o switch. Dentro de cada case, use SOMENTE os campos
 //   que existem naquela variante. Sem `default`.
 export function descreverTela(estado: EstadoTela<Habito>): string {
-  throw new Error('TODO 4.2 — implemente descreverTela()');
+  switch (estado.tipo) {
+    case 'carregando': return "Carregando...";
+    case 'sucesso': return JSON.stringify(estado.dados);
+    case 'erro': return estado.mensagem;
+  }
+  // throw new Error('TODO 4.2 — implemente descreverTela()');
 }
 
 // ============================================================
@@ -30,9 +38,9 @@ export function descreverTela(estado: EstadoTela<Habito>): string {
 declare const habitoExemplo: Habito;
 
 // Depois do TODO 4.1, estas TRÊS DEVEM compilar — descomente:
-// descreverTela({ tipo: 'carregando' });
-// descreverTela({ tipo: 'sucesso', dados: habitoExemplo });
-// descreverTela({ tipo: 'erro', mensagem: 'Sem conexão' });
+descreverTela({ tipo: 'carregando' });
+descreverTela({ tipo: 'sucesso', dados: habitoExemplo });
+descreverTela({ tipo: 'erro', mensagem: 'Sem conexão' });
 
 // E estas TRÊS DEVEM dar erro — descomente uma de cada vez:
 // descreverTela({ tipo: 'carregando', dados: habitoExemplo });
