@@ -25,7 +25,13 @@ const ATRASO_MS = 1000;
 //   de campos faltando — se o compilador reclamar, ele está certo.
 // ============================================================
 const MOCK: Habito = {
-  // ← escreva os campos aqui
+  id: '123e4567-e89b-12d3-a456-426614174000',
+  titulo: 'Beber 2L de água',
+  categoria: 'saude',
+  frequencia: 'diariamente',
+  status: 'pendente',
+  streakDias: 5,
+  criadoEm: '2026-08-28T10:00:00.000Z',
 };
 
 /**
@@ -35,11 +41,14 @@ const MOCK: Habito = {
 export async function buscarHabitoDoDia(): Promise<Habito> {
   // TODO A1.7 — espere ATRASO_MS antes de responder.
   //   Dica: await new Promise((r) => setTimeout(r, ATRASO_MS));
+  await new Promise((r) => setTimeout(r, ATRASO_MS));
 
   // TODO A1.8 — se SIMULAR_ERRO for true, lance um Error com uma mensagem
   //   legível para o usuário final — não um stack trace.
+  if (SIMULAR_ERRO) {
+    throw new Error('Não foi possível buscar o hábito do dia. Por favor, verifique sua conexão e tente novamente.');
+  }
 
   // TODO A1.9 — devolva o MOCK.
-
-  throw new Error('TODO A1.7 a A1.9 — implemente buscarHabitoDoDia()');
+  return MOCK;
 }
