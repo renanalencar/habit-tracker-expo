@@ -7,24 +7,29 @@
 
 // TODO 3.1 — declare StatusHabito como union de literais:
 //            'pendente' | 'concluido' | 'pulado'
-export type StatusHabito = never; // ← substitua `never`
+export type StatusHabito = 'pendente' | 'concluido' | 'pulado'; // ← substitua `never`
 
 // TODO 3.2 — declare CategoriaHabito como union de literais:
 //            'saude' | 'produtividade' | 'mentalidade' | 'sono'
-export type CategoriaHabito = never; // ← substitua `never`
+export type CategoriaHabito = 'saude' | 'produtividade' | 'mentalidade' | 'sono'; // ← substitua `never`
 
 export interface Habito {
   id: string;
   titulo: string;
-  categoria: string; // TODO 3.3 — troque por CategoriaHabito
-  status: string; // TODO 3.3 — troque por StatusHabito
+  categoria: CategoriaHabito; // TODO 3.3 — troque por CategoriaHabito
+  status: StatusHabito; // TODO 3.3 — troque por StatusHabito
 }
 
 // TODO 3.4 — complete com um `case` para cada status.
 //   NÃO escreva um `default` — o objetivo é justamente deixar o
 //   compilador cobrar os casos que faltam.
 export function rotuloStatus(status: StatusHabito): string {
-  throw new Error('TODO 3.4 — implemente rotuloStatus()');
+  switch (status) {
+    case 'concluido': return "Concluído";
+    case 'pendente': return "Pendente";
+    case 'pulado': return "Pulado";
+  }
+  // throw new Error('TODO 3.4 — implemente rotuloStatus()');
 }
 
 // ============================================================
@@ -39,7 +44,7 @@ declare const h: Habito;
 // h.categoria = 'financas';   // categoria que ninguém combinou
 
 // E esta DEVE continuar compilando:
-// h.status = 'concluido';
+h.status = 'concluido';
 
 // ============================================================
 // DEPOIS DE FAZER COMPILAR

@@ -21,13 +21,20 @@ export function lerHabitoRuim(json: unknown): Habito {
 //   Dica: comece por `typeof valor === 'object' && valor !== null`
 //   e depois verifique 'id', 'titulo' e 'status' com o operador `in`.
 export function ehHabito(valor: unknown): valor is Habito {
-  throw new Error('TODO 6.1 — implemente ehHabito()');
+  if (typeof valor === 'object' && valor != null) {
+    if ('id' in valor && 'titulo' in valor && 'status' in valor) {
+      return true;
+    }
+  }
+  return false;
+  // throw new Error('TODO 6.1 — implemente ehHabito()');
 }
 
 // TODO 6.2 — reescreva a leitura usando o type guard.
 //   Se o valor não for um Habito, lance um Error com mensagem clara.
 export function lerHabito(json: unknown): Habito {
-  throw new Error('TODO 6.2 — implemente lerHabito()');
+  if (ehHabito(json)) return json;
+  throw new Error("JSON inválido")
 }
 
 // TODO 6.3 — em UMA linha aqui embaixo, explique por que `as Habito`
@@ -39,10 +46,10 @@ export function lerHabito(json: unknown): Habito {
 // Depois dos TODO, descomente e rode: npx tsx exercicios/ex06.ts
 // ============================================================
 
-// console.log(ehHabito({ id: 'h1', titulo: 'Água', status: 'pendente' })); // true
-// console.log(ehHabito({ id: 'h1' }));                                     // false
-// console.log(ehHabito(null));                                             // false
-// console.log(ehHabito('h1'));                                             // false
+console.log(ehHabito({ id: 'h1', titulo: 'Água', status: 'pendente' })); // true
+console.log(ehHabito({ id: 'h1' }));                                     // false
+console.log(ehHabito(null));                                             // false
+console.log(ehHabito('h1'));                                             // false
 
 // DEVE lançar Error, não devolver um objeto quebrado:
 // lerHabito({ nada: 'a ver' });
