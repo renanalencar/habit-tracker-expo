@@ -14,7 +14,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
-import { CardHabito } from './src/components/CardHabito';
+import { CardHabito } from './src/components/Cardhabito';
 import { Cabecalho } from './src/components/Cabecalho';
 import type { EstadoTela, Habito } from './src/types/habito';
 
@@ -97,15 +97,6 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
     paddingTop: 56,
-  },
-  conteudo: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 16,
-  },
-  erro: {
-    color: '#e53935',
-    textAlign: 'center',
   },
   conteudo: {
     flex: 1,
