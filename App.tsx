@@ -14,7 +14,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
-import { CardHabito } from './src/components/Cardhabito';
+import { CardHabito } from './src/components/CardHabito';
 import { Cabecalho } from './src/components/Cabecalho';
 import type { EstadoTela, Habito } from './src/types/habito';
 
@@ -61,7 +61,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Cabecalho total={5} concluidos={2} />
-      <View style={styles.conteudo}>{renderizarConteudo(estado)}</View>
+      <View style={styles.conteudo}>{renderizarConteudo(estado, setEstado)}</View>
       <StatusBar style="auto" />
     </View>
   );
@@ -76,7 +76,7 @@ function concluirHabito(estado: EstadoTela<Habito>, setEstado: (estado: EstadoTe
   }
 };
 
-function renderizarConteudo(estado: EstadoTela<Habito>) {
+function renderizarConteudo(estado: EstadoTela<Habito>, setEstado: (estado: EstadoTela<Habito>) => void) {
   switch (estado.situacao) {
     case 'carregando':
       return <ActivityIndicator size="large" color="#1e88e5" />;
@@ -91,7 +91,7 @@ function renderizarConteudo(estado: EstadoTela<Habito>) {
           categoria={estado.dados.categoria}
           status={estado.dados.status}
           destacado
-          onPress={() => concluirHabito(estado)}
+          onPress={() => concluirHabito(estado, setEstado)}
         />
       );
     default: {
