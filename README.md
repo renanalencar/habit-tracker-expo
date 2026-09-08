@@ -56,3 +56,20 @@ Nos dois casos, o estado inicial passa limpo. Conforme você substitui os `never
 Resolva os `TODO` na ordem em que aparecem e mantenha **um commit por exercício** (ou por bloco), para que o histórico da branch sirva de evidência de progresso.
 
 O conteúdo da Aula 2 (Core Components, props tipadas, `CardHabito`, `Cabecalho`) vive na branch `feature/02_aula_react_native`.
+
+## Estado atual — Aula 3
+
+Esqueletos da **Atividade 1** de `exercises.md` (Core Components — domínio `Habito`): sistema de tokens, um componente `Card` reutilizável e um formulário de criar/editar hábito. Os TODOs seguem a numeração do enunciado (1 a 24, contínua entre os três arquivos).
+
+| Onde | O que é | Referência em `exercises.md` |
+|---|---|---|
+| `src/theme.ts` | Tokens de cor, espaço e tipografia | Atividade 1 · TODO 1 – 4 |
+| `src/components/Card.tsx` | Card genérico reutilizável, com variante `destacado` | Atividade 1 · TODO 5 – 10 |
+| `src/screens/HabitoForm.tsx` | Formulário de criar/editar `Habito` | Atividade 1 · TODO 11 – 24 |
+
+Notas sobre o esqueleto desta aula:
+
+- `Card.tsx` (o componente genérico do tema) é diferente de `CardHabito.tsx` (o card específico do domínio, da Aula 2) — os dois convivem no projeto, com responsabilidades diferentes.
+- `HabitoForm.tsx` ainda não está ligado a nenhuma navegação — a Aula 3 não cobre isso. O próprio arquivo explica, em comentário, como pré-visualizá-lo temporariamente a partir de `App.tsx`.
+- O estado inicial compila limpo (`npx tsc --noEmit`), mas está incompleto: `theme.ts` começa com tokens vazios de propósito, então não referencie `cores`/`espaco`/`tipografia` em código real antes de completá-los — só nos comentários `TODO`, como já está no esqueleto.
+- A Atividade 2 (auditoria de estilo) é um relatório em Markdown, não código — não tem esqueleto neste repositório.
