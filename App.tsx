@@ -35,6 +35,7 @@ function buscarHabitoDoDia(): Promise<Habito> {
   });
 }
 
+
 export default function App() {
   // Ex. 6 — um único estado com união discriminada, em vez de três booleanos/nulos
   // independentes. Estados impossíveis (carregando + erro, sucesso sem dados)
@@ -66,6 +67,15 @@ export default function App() {
   );
 }
 
+function concluirHabito(estado: EstadoTela<Habito>, setEstado: (estado: EstadoTela<Habito>) => void) {
+  if (estado.situacao === 'sucesso') {
+    setEstado({
+      situacao: 'sucesso',
+      dados: { ...estado.dados, status: 'concluido' },
+    });
+  }
+};
+
 function renderizarConteudo(estado: EstadoTela<Habito>) {
   switch (estado.situacao) {
     case 'carregando':
@@ -81,7 +91,7 @@ function renderizarConteudo(estado: EstadoTela<Habito>) {
           categoria={estado.dados.categoria}
           status={estado.dados.status}
           destacado
-          onPress={() => { }}
+          onPress={() => concluirHabito(estado)}
         />
       );
     default: {
