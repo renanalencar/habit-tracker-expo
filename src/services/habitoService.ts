@@ -15,5 +15,11 @@ const MOCK: Habito = {
 };
 
 export async function buscarHabitoDoDia(): Promise<Habito> {
-  throw new Error('TODO A1.7 a A1.9 — implemente buscarHabitoDoDia()');
+  await new Promise((r) => setTimeout(r, ATRASO_MS));
+
+  if (SIMULAR_ERRO) {
+    throw new Error('Não foi possível buscar o hábito do dia. Por favor, verifique sua conexão e tente novamente.');
+  }
+
+  return MOCK;
 }
