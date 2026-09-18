@@ -73,3 +73,62 @@ Notas sobre o esqueleto desta aula:
 - `HabitoForm.tsx` ainda não está ligado a nenhuma navegação — a Aula 3 não cobre isso. O próprio arquivo explica, em comentário, como pré-visualizá-lo temporariamente a partir de `App.tsx`.
 - O estado inicial compila limpo (`npx tsc --noEmit`), mas está incompleto: `theme.ts` começa com tokens vazios de propósito, então não referencie `cores`/`espaco`/`tipografia` em código real antes de completá-los — só nos comentários `TODO`, como já está no esqueleto.
 - A Atividade 2 (auditoria de estilo) é um relatório em Markdown, não código — não tem esqueleto neste repositório.
+
+## Estado atual — Aula 4
+
+Esqueletos da Aula 4 (**Pressable, FlatList e SectionList** — domínio `Habito`): os
+exercícios guiados da Parte 1 e a **Atividade 1**, que transforma a tela da Aula 3 numa
+lista de produto. Como na Aula 3, os TODOs seguem uma **numeração contínua entre todos os
+arquivos** — de 1 a 82, na ordem em que se resolve.
+
+| Onde | O que é | Referência em `exercises.md` | TODOs |
+|---|---|---|---|
+| `exercicios/aula-04/` | Exercícios guiados 1 a 7 (sandbox, fora do build do app) | Parte 1 | 1 – 42 |
+| `src/data/habitos.ts` | O mock da lista — 20+ itens | Atividade 1 · esqueleto 1 | 43 |
+| `src/lib/agrupar.ts` | `agrupar` e `filtrarPorTitulo` — funções puras, sem JSX | Atividade 1 · esqueleto 2 | 44 – 47 |
+| `src/components/botao-acao.tsx` | O `BotaoAcao` reutilizável (o do Exercício 3) | Atividade 1 · item 5 | 48 – 50 |
+| `src/components/item-habito.tsx` | O item tocável: toque curto alterna, longo remove | Atividade 1 · esqueleto 3 | 51 – 56 |
+| `src/components/lista-vazia.tsx` | Os **dois** estados vazios, com textos diferentes | Atividade 1 · esqueleto 4 | 57 – 58 |
+| `src/screens/tela-habitos.tsx` | A tela principal com `SectionList` e os quatro estados | Atividade 1 · esqueleto 5 | 59 – 70 |
+| `README.md` (aqui, abaixo) | A seção "Decisões da Aula 4" | Atividade 1 · item 6 | 71 – 73 |
+| `auditoria-lista.md` | Auditoria de lista em código alheio | Atividade 2 | 74 – 79 |
+| `diff.md` | Refazer a lista da Aula 3 *(bônus, opcional)* | Atividade 3 | 80 – 82 |
+
+Notas sobre o esqueleto desta aula:
+
+- **Os exercícios guiados ficam fora do app.** `exercicios/aula-04/` tem `tsconfig.json`
+  próprio e não entra no build do Expo — o enunciado pede um sandbox descartável, e é isso
+  que ele é. A entrega avaliada é a Atividade 1, em `src/`.
+- **Os arquivos da Aula 4 usam `kebab-case`**, como no enunciado (`item-habito.tsx`,
+  `lista-vazia.tsx`). Os da Aula 2 e 3 estão em `PascalCase` — os dois convivem; não
+  renomeie o que já existe só por consistência.
+- **Nada foi ligado ao `App.tsx`.** `tela-habitos.tsx`, como o `HabitoForm.tsx` da Aula 3,
+  ainda não tem navegação (isso é Aula 6). Cada arquivo explica em comentário como
+  pré-visualizá-lo temporariamente.
+- **O estado inicial compila limpo** (`npx tsc --noEmit` e
+  `npx tsc --noEmit -p exercicios/aula-04`) e **roda**: onde falta implementação há um
+  valor de espera (`null`, `[]`, o array devolvido sem mudança). Compila e roda, mas não
+  faz o que o exercício pede — é isso que os TODOs cobram.
+- `src/components/item-habito.tsx` é mais um card de hábito no projeto, ao lado de
+  `CardHabito.tsx` (Aula 2) e `Card.tsx` (Aula 3). Ele não substitui nenhum dos dois: o
+  TODO 55 pede justamente que o `Card` da Aula 3 seja reaproveitado por dentro dele.
+
+## Decisões da Aula 4
+
+> Seção exigida pela Atividade 1 (item 6). Responda **em texto corrido**, com critério —
+> "porque é melhor" não é resposta.
+
+**Por que `SectionList` e não `FlatList` neste caso?**
+
+<!-- TODO 71: qual é o critério de agrupamento que vocês escolheram (status, período do
+     dia ou categoria), e o que o agrupamento dá ao usuário que a lista plana não daria. -->
+
+**Onde vocês agrupam os dados, e por que não é dentro do JSX?**
+
+<!-- TODO 72: diga também em que ORDEM vocês filtram e agrupam (TODO 62), e por que essa
+     ordem importa. -->
+
+**O que acontece com o cabeçalho de seção em cada plataforma, e o que vocês decidiram?**
+
+<!-- TODO 73: cite os defaults de iOS e Android e diga qual comportamento vocês fixaram
+     no código — e por que deixar no default seria terceirizar uma decisão de produto. -->
