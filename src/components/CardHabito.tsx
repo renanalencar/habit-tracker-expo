@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 
 import type { Habito } from '../types/habito';
 import { corDoStatus, rotuloDoStatus } from '../utils/status-habito';
+import { tipografia } from '../theme';
 
 export type CardHabitoProps = Pick<Habito, 'titulo' | 'categoria' | 'status'> & {
   onPress: () => void;
@@ -17,7 +18,7 @@ export function CardHabito({
 }: CardHabitoProps) {
   return (
     <Pressable onPress={onPress} style={[styles.card, destacado && styles.destaque]}>
-      <Text style={styles.titulo}>{titulo}</Text>
+      <Text style={tipografia.titulo}>{titulo}</Text>
       <Text style={[styles.meta, { color: corDoStatus(status) }]}>
         {categoria} · {rotuloDoStatus(status)}
       </Text>
@@ -38,10 +39,10 @@ const styles = StyleSheet.create({
     borderColor: '#1e88e5',
     borderWidth: 2,
   },
-  titulo: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
+  // titulo: {
+  //   fontSize: 16,
+  //   fontWeight: '600',
+  // },
   meta: {
     fontSize: 13,
     textTransform: 'capitalize',
