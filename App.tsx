@@ -5,6 +5,8 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { CardHabito } from './src/components/CardHabito';
 import { Cabecalho } from './src/components/Cabecalho';
 import type { EstadoTela, Habito } from './src/types/habito';
+import GradeLab from './src/grade-lab';
+import CardHabitoInterativo from './src/components/card-habito-interativo';
 
 const HABITO_DO_DIA: Habito = {
   id: 'h1',
@@ -46,6 +48,8 @@ export default function App() {
       <Cabecalho total={5} concluidos={2} />
       <View style={styles.conteudo}>{renderizarConteudo(estado, setEstado)}</View>
       <StatusBar style="auto" />
+      <CardHabitoInterativo />
+      <GradeLab />
     </View>
   );
 }

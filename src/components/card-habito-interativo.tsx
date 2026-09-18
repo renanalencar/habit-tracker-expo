@@ -2,22 +2,22 @@
 import { useState } from 'react';
 import { View, Text, Switch, Button, StyleSheet } from 'react-native';
 
-export default function CardHabito() {
+export default function CardHabitoInterativo() {
     const [concluido, setConcluido] = useState(false);
     const [lembrete, setLembrete] = useState(false);
 
     // TODO 1: inverta o estado. Use a forma de função — o novo valor deriva do anterior.
-    const alternar = () => { /* ... */ };
+    const alternar = () => { setConcluido(prev => !prev); };
 
     return (
         // TODO 2: array de estilos — o base SEMPRE, o `cardConcluido` só quando concluído.
         //         Cuidado: com ternário você TROCA o estilo; com array você SOMA.
-        <View style={/* ... */}>
+        <View style={[styles.card, concluido && styles.cardConcluido]}>
             <Text
                 // TODO 3: mesma ideia — styles.titulo + styles.tituloConcluido condicional
-                style={/* ... */}
+                style={[styles.titulo, concluido && styles.tituloConcluido]}
                 // TODO 4: o que dispara a alternância no toque?
-                onPress={/* ... */}
+                onPress={alternar}
             >
                 Beber 2L de água
             </Text>
@@ -26,11 +26,11 @@ export default function CardHabito() {
                 <Text style={styles.rotulo}>Lembrete diário</Text>
                 {/* TODO 5: ligue o Switch ao estado `lembrete`.
             Lembre: sem `value`, ele volta sozinho ao valor anterior. */}
-                <Switch value={/* ... */} onValueChange={/* ... */} />
+                <Switch value={lembrete} onValueChange={setLembrete} />
             </View>
 
             {/* TODO 6: 'Desmarcar' quando concluído, 'Marcar concluído' quando pendente */}
-            <Button title={/* ... */} onPress={alternar} />
+            <Button title={concluido ? 'Desmarcar' : 'Marcar concluído'} onPress={alternar} />
         </View>
     );
 }

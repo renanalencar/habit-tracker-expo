@@ -19,15 +19,16 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         padding: 10,
         // TODO 1: a propriedade que espaça irmãos entra AQUI. Qual é?
+        gap: 10,
     },
     celula: {
         // TODO 2: com `gap` no pai, três células de '30%' ainda cabem na linha?
         //         Faça a conta antes de mexer. Se não couberem, há duas saídas —
         //         uma ajusta a largura, a outra deixa o flex calcular. Prefira a segunda.
-        width: '30%',
+        flexBasis: '30%',
+        flexGrow: 1,
         height: 100,
         backgroundColor: '#F3E9DC',
         // TODO 3: remova o margin. Ele é a causa do espaçamento irregular.
-        margin: 5,
     },
 });
