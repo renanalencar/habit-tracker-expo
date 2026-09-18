@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-
 import { CardHabito } from './src/components/CardHabito';
 import { Cabecalho } from './src/components/Cabecalho';
 import type { EstadoTela, Habito } from './src/types/habito';
 import GradeLab from './src/grade-lab';
 import CardHabitoInterativo from './src/components/card-habito-interativo';
+import { HabitoForm } from './src/screens/HabitoForm';
 
 const HABITO_DO_DIA: Habito = {
   id: 'h1',
@@ -45,11 +45,12 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Cabecalho total={5} concluidos={2} />
+      {/* <Cabecalho total={5} concluidos={2} />
       <View style={styles.conteudo}>{renderizarConteudo(estado, setEstado)}</View>
       <StatusBar style="auto" />
       <CardHabitoInterativo />
-      <GradeLab />
+      <GradeLab /> */}
+      <HabitoForm />
     </View>
   );
 }
