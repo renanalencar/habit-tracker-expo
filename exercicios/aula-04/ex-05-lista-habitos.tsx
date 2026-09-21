@@ -14,35 +14,55 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { MOCK } from './dados-mock';
 import type { Habito } from '../../src/types/habito';
 
-// TODO 18: o componente do separador entre itens — uma View de 10 px de altura, sem cor.
+// TODO 1: o componente do separador entre itens — uma View de 10 px de altura, sem cor.
 //          O estilo `separador` já existe lá embaixo; troque o `null` pelo elemento.
 export function Separador() {
-  return null;
+  // return null;
+  return (
+    <View style={styles.separador} />
+  )
 }
 
-// TODO 19: o componente do estado vazio — um título e uma frase de apoio.
+// TODO 2: o componente do estado vazio — um título e uma frase de apoio.
 //          Este componente É AVALIADO: uma tela em branco parece bug.
 //          A frase precisa dizer ao usuário O QUE FAZER, não só que a lista está vazia.
 //          Estilos prontos: `vazio`, `vazioTitulo`, `legenda`.
 export function ListaVazia() {
-  return null;
+  // return null;
+  return (
+    <View style={styles.vazio}>
+      <Text style={styles.vazioTitulo}>Nenhum hábito por aqui</Text>
+      <Text style={styles.legenda}>Toque em "Novo hábito" para começar.</Text>
+    </View>
+  )
 }
 
-// TODO 20: o cabeçalho da lista. Declare-o AQUI FORA, de um jeito que NÃO remonte a cada render.
+// TODO 3: o cabeçalho da lista. Declare-o AQUI FORA, de um jeito que NÃO remonte a cada render.
 //          Dica: não precisa ser uma função — pode ser o elemento pronto.
 //          (Com um <Text> ninguém percebe a diferença; com o TextInput de busca da
 //          Atividade 1 lá dentro, o campo perderia o foco a cada tecla.)
-const Cabecalho = null;
+function Cabecalho() {
+  return <Text style={styles.cabecalho}>Hábitos de hoje</Text>;
+}
 
 // A troca de status mora FORA do componente, como função pura, para o Exercício 6
 // poder reaproveitá-la. O enunciado escreve isso dentro da tela; aqui é o mesmo código,
 // só que sem `useState` no meio.
 export function alternarStatus(habitos: Habito[], id: string): Habito[] {
-  // TODO 24: devolva um array NOVO em que o hábito de `id` alterna entre
+  // TODO 4: devolva um array NOVO em que o hábito de `id` alterna entre
   //          'pendente' e 'concluido'. Os demais passam intactos.
   //          ATENÇÃO: se a lista não mudar de aparência na tela, você mutou o objeto
   //          em vez de criar um novo — e a FlatList, que é PureComponent, não viu diferença.
-  return habitos;
+  // return habitos;
+  return habitos.map(habito => {
+    if (habito.id === id) {
+      return {
+        ...habito,
+        status: habito.status === 'pendente' ? 'concluido' : 'pendente'
+      };
+    }
+    return habito;
+  });
 }
 
 type ItemProps = { habito: Habito; onAlternar: (id: string) => void };
@@ -52,10 +72,12 @@ export function ItemHabito({ habito, onAlternar }: ItemProps) {
 
   return (
     <Pressable
-      // TODO 21: chamar `onAlternar` com o id do hábito — no callback CERTO.
-      // TODO 22: evitar que o item pisque quando o dedo só está começando a rolar a lista.
-      style={styles.item}
-      // TODO 23: `style` acima precisa virar uma função que recebe `{ pressed }` e soma
+      // TODO 5: chamar `onAlternar` com o id do hábito — no callback CERTO.
+      onPress={() => onAlternar(habito.id)}
+      // TODO 6: evitar que o item pisque quando o dedo só está começando a rolar a lista.
+      unstable_pressDelay={80}
+      style={({pressed}) => [styles.item, pressed && styles.itemPressionado]}
+      // TODO 7: `style` acima precisa virar uma função que recebe `{ pressed }` e soma
       //          `itemPressionado` ao estilo base enquanto o dedo estiver no item.
     >
       <View style={styles.itemTexto}>
@@ -69,7 +91,7 @@ export function ItemHabito({ habito, onAlternar }: ItemProps) {
   );
 }
 
-export default function TelaHabitos() {
+export function TelaHabitos() {
   const [habitos, setHabitos] = useState<Habito[]>(MOCK);
 
   function alternar(id: string) {
@@ -81,11 +103,15 @@ export default function TelaHabitos() {
       <FlatList
         data={habitos}
         renderItem={({ item }) => <ItemHabito habito={item} onAlternar={alternar} />}
-        // TODO 25: precisa de `keyExtractor` aqui? Responda em um comentário de UMA LINHA,
+        // TODO 8: precisa de `keyExtractor` aqui? Responda em um comentário de UMA LINHA,
         //          logo abaixo, com o motivo. (Cuidado: a resposta óbvia não é a certa —
         //          olhe o que o extractor padrão procura no item, e o que o `Habito` tem.)
-        // TODO 26: ligue o separador (TODO 18), o estado vazio (TODO 19) e o cabeçalho (TODO 20).
+        keyExtractor={item => item.id}
+        // TODO 9: ligue o separador (TODO 1), o estado vazio (TODO 2) e o cabeçalho (TODO 3).
         //          São três props; nenhuma delas é `renderItem`.
+        ItemSeparatorComponent={Separador}
+        ListEmptyComponent={ListaVazia}
+        ListHeaderComponent={Cabecalho}
         contentContainerStyle={styles.conteudo}
       />
       <Text style={styles.limpar} onPress={() => setHabitos([])}>
@@ -96,7 +122,7 @@ export default function TelaHabitos() {
 }
 
 export const styles = StyleSheet.create({
-  tela: { flex: 1, backgroundColor: '#FEF7EE' },
+  tela: { flex: 1, backgroundColor: '#FEF7EE', borderRadius: 24 },
   conteudo: { padding: 16, paddingBottom: 32 },
   cabecalho: { fontSize: 22, fontWeight: '700', marginBottom: 12 },
   item: {

@@ -67,7 +67,7 @@ export default function LabToque() {
 }
 
 const styles = StyleSheet.create({
-  tela: { flex: 1, padding: 24, gap: 8, justifyContent: 'center' },
+  tela: { flex: 1, padding: 24, gap: 8, justifyContent: 'center', borderRadius: 24 },
   alvo: { backgroundColor: '#FF6002', padding: 32, borderRadius: 16, alignItems: 'center' },
   alvoPressionado: { backgroundColor: '#232323' },
   rotuloAlvo: { color: '#fff', fontSize: 18, fontWeight: '600' },

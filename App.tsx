@@ -4,9 +4,13 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { CardHabito } from './src/components/CardHabito';
 import { Cabecalho } from './src/components/Cabecalho';
 import type { EstadoTela, Habito } from './src/types/habito';
-import GradeLab from './src/grade-lab';
-import CardHabitoInterativo from './src/components/card-habito-interativo';
-import { HabitoForm } from './src/screens/HabitoForm';
+import BotaoAcao from './exercicios/aula-04/ex-03-botao-acao';
+import TelaBotaoAcao from './exercicios/aula-04/ex-03-botao-acao';
+import LabToque from './exercicios/aula-04/ex-04-lab-toque';
+import { TelaHabitos as TelaHabitosAula4 } from './exercicios/aula-04/ex-05-lista-habitos';
+import TelaSecoesDemo from "./exercicios/aula-04/ex-06-secoes-habitos";
+import TelaSelecao from "./exercicios/aula-04/ex-07-lista-nao-atualiza";
+import { TelaHabitos } from "./src/screens/tela-habitos";
 
 const HABITO_DO_DIA: Habito = {
   id: 'h1',
@@ -44,14 +48,31 @@ export default function App() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      {/* <Cabecalho total={5} concluidos={2} />
-      <View style={styles.conteudo}>{renderizarConteudo(estado, setEstado)}</View>
-      <StatusBar style="auto" />
-      <CardHabitoInterativo />
-      <GradeLab /> */}
-      <HabitoForm />
-    </View>
+    // <View style={styles.container}>
+    //   <Cabecalho total={5} concluidos={2} />
+    //   <View style={styles.conteudo}>{renderizarConteudo(estado, setEstado)}</View>
+    //   <StatusBar style="auto" />
+    // </View>
+
+  <View style={styles.container}>
+    {/* ex-03-botao-acao.tsx - descomente aqui para testar exercício */}
+    {/* <TelaBotaoAcao /> */}
+
+    {/* ex-04-lab-toque.tsx - descomente aqui para testar exercício */}
+    {/* <LabToque /> */}
+
+    {/* ex-05-lista-habitos.tsx - descomente aqui para testar exercício */}
+    {/* <TelaHabitosAual4 /> */}
+
+    {/* ex-06-secoes-habitos.tsx - descomente aqui para testar exercício */}
+    {/* <TelaSecoesDemo /> */}
+
+    {/* ex-07-lista-nao-atualiza.tsx - descomente aqui para testar exercício */}
+    {/* <TelaSelecao /> */}
+
+    {/* Aula 4 Atividade 1 - descomente aqui para testar exercício */}
+    <TelaHabitos />
+  </View>
   );
 }
 

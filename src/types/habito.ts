@@ -11,6 +11,7 @@ export interface Habito {
   frequencia: FrequenciaHabito;
   status: StatusHabito;
   streakDias: number;
+  destacado?: boolean;
   criadoEm: string;
 }
 
