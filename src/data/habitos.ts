@@ -1,14 +1,5 @@
-// Atividade 1 · Aula 4 — o mock da tela de lista.
-//
-// Lista pequena esconde exatamente os problemas que esta aula ensina a evitar:
-// com 4 itens nada rola, nada vira, nenhum grupo fica vazio e o separador não aparece.
 import type { Habito } from '../types/habito';
 
-// TODO 4.1: leve este array a NO MÍNIMO 20 itens, distribuídos em pelo menos 3 grupos
-//          do critério de agrupamento que o grupo escolher (status, período do dia
-//          ou categoria — a escolha é justificada no README, TODO 1.29).
-//          Os quatro abaixo são só o formato. Varie títulos, categorias, status e streak:
-//          é o que faz a busca (TODO 1.28) e o estado "filtrado sem resultado" terem o que testar.
 export const HABITOS: Habito[] = [
   {
     id: 'h1',

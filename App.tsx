@@ -4,13 +4,15 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { CardHabito } from './src/components/CardHabito';
 import { Cabecalho } from './src/components/Cabecalho';
 import type { EstadoTela, Habito } from './src/types/habito';
-import BotaoAcao from './exercicios/aula-04/ex-03-botao-acao';
-import TelaBotaoAcao from './exercicios/aula-04/ex-03-botao-acao';
-import LabToque from './exercicios/aula-04/ex-04-lab-toque';
-import { TelaHabitos as TelaHabitosAula4 } from './exercicios/aula-04/ex-05-lista-habitos';
-import TelaSecoesDemo from "./exercicios/aula-04/ex-06-secoes-habitos";
-import TelaSelecao from "./exercicios/aula-04/ex-07-lista-nao-atualiza";
 import { TelaHabitos } from "./src/screens/tela-habitos";
+// Aula 5 — exercícios guiados (precisam de APARELHO FÍSICO: o iOS Simulator não tem
+// câmera, acelerômetro nem giroscópio).
+import TelaOndeEuEstou from "./exercicios/aula-05/ex-03-onde-eu-estou";
+import TelaChacoalhada from "./exercicios/aula-05/ex-04-chacoalhada";
+import TelaFotoHabito from "./exercicios/aula-05/ex-05-camera-previa";
+import TelaGiroscopio from "./exercicios/aula-05/ex-06-giroscopio";
+import TelaGaleria from "./exercicios/aula-05/ex-07-galeria-que-pisca";
+import { TelaNivelBolha } from "./src/screens/tela-nivel-bolha";
 
 const HABITO_DO_DIA: Habito = {
   id: 'h1',
@@ -55,22 +57,29 @@ export default function App() {
     // </View>
 
   <View style={styles.container}>
-    {/* ex-03-botao-acao.tsx - descomente aqui para testar exercício */}
-    {/* <TelaBotaoAcao /> */}
+    {/* Aula 5 — exercícios guiados (exercicios/aula-05/).
+        Descomente UM de cada vez para testar. Precisam de aparelho físico. */}
 
-    {/* ex-04-lab-toque.tsx - descomente aqui para testar exercício */}
-    {/* <LabToque /> */}
+    {/* ex-03-onde-eu-estou.tsx - descomente aqui para testar exercício */}
+    {/* <TelaOndeEuEstou /> */}
 
-    {/* ex-05-lista-habitos.tsx - descomente aqui para testar exercício */}
-    {/* <TelaHabitosAual4 /> */}
+    {/* ex-04-chacoalhada.tsx - descomente aqui para testar exercício */}
+    {/* <TelaChacoalhada /> */}
 
-    {/* ex-06-secoes-habitos.tsx - descomente aqui para testar exercício */}
-    {/* <TelaSecoesDemo /> */}
+    {/* ex-05-camera-previa.tsx - descomente aqui para testar exercício */}
+    {/* <TelaFotoHabito /> */}
 
-    {/* ex-07-lista-nao-atualiza.tsx - descomente aqui para testar exercício */}
-    {/* <TelaSelecao /> */}
+    {/* ex-06-giroscopio.tsx - descomente aqui para testar exercício */}
+    {/* <TelaGiroscopio /> */}
 
-    {/* Aula 4 Atividade 1 - descomente aqui para testar exercício */}
+    {/* ex-07-galeria-que-pisca.tsx - descomente aqui para testar exercício */}
+    {/* <TelaGaleria /> */}
+
+    {/* Aula 5 Atividade 3 (bônus) - descomente aqui para testar o nível de bolha */}
+    {/* <TelaNivelBolha /> */}
+
+    {/* A tela principal (Aula 4) — o botão "Novo hábito" é a porta de entrada da
+        Atividade 1 da Aula 5, depois que o TODO 5.21 estiver feito. */}
     <TelaHabitos />
   </View>
   );

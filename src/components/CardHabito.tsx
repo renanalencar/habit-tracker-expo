@@ -1,13 +1,23 @@
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+// Aula 5 — CUIDADO COM ESTE IMPORT: `react-native` também exporta um `Image`.
+// O do `expo-image` é o que tem cache em disco, `contentFit`, `placeholder`,
+// `transition` e `recyclingKey`. O outro não tem nenhum dos cinco.
+import { Image } from 'expo-image';
 
 import type { Habito } from '../types/habito';
 import { corDoStatus, rotuloDoStatus } from '../utils/status-habito';
+import { formatarLocal } from '../lib/formatar-local';
 import { cores, espaco, tipografia } from '../theme';
 
 export type CardHabitoProps = Pick<Habito, 'titulo' | 'categoria' | 'status'> & {
   onPress: () => void;
-  // TODO 5: a prop opcional que muda a aparência do card
   destacado?: boolean;
+  // Aula 5 — os dois novos campos do domínio. Opcionais aqui pelo mesmo motivo que são
+  // opcionais no tipo: o usuário pode ter negado a câmera, o GPS, ou os dois.
+  fotoUri?: Habito['fotoUri'];
+  local?: Habito['local'];
+  /** O id do hábito, usado como `recyclingKey` da foto. */
+  recyclingKey?: string;
 };
 
 export function CardHabito({
@@ -15,38 +25,76 @@ export function CardHabito({
   categoria,
   status,
   onPress,
-  destacado = false, /* TODO 6: desestruture a prop do TODO 5 aqui */
+  destacado = false,
+  fotoUri,
+  local,
+  recyclingKey,
 }: CardHabitoProps) {
-    // TODO 7: troque `styles.card` por um array — base sempre, variante só quando a prop for true.
-  //         Cuidado: com ternário você TROCA o estilo; com array você SOMA.
   return (
     <Pressable onPress={onPress} style={[styles.card, destacado && styles.destaque]}>
-      <Text style={tipografia.titulo}>{titulo}</Text>
-      <Text style={[styles.meta, { color: corDoStatus(status) }]}>
-        {categoria} · {rotuloDoStatus(status)}
-      </Text>
+      {fotoUri ? (
+        <Image
+          source={{ uri: fotoUri }}
+          style={styles.miniatura}
+          contentFit="cover"
+          transition={200}
+          recyclingKey={recyclingKey}
+          accessibilityLabel={`Foto do hábito ${titulo}`}
+        />
+      ) : (
+        // Hábito sem foto ainda é um hábito: o espaço é reservado do mesmo tamanho para
+        // que a lista não fique com cards de alturas diferentes.
+        <View style={[styles.miniatura, styles.miniaturaVazia]} />
+      )}
+
+      <View style={styles.corpo}>
+        <Text style={tipografia.titulo} numberOfLines={2}>
+          {titulo}
+        </Text>
+        <Text style={[styles.meta, { color: corDoStatus(status) }]}>
+          {categoria} · {rotuloDoStatus(status)}
+        </Text>
+
+        {/* TODO 5.1: quando houver local, mostre-o de forma legível para HUMANOS,
+                  incluindo o raio de precisão. Coordenada crua com 14 casas
+                  decimais não é informação para o usuário.
+                  A formatação é função pura e mora em `lib/formatar-local.ts`
+                  (TODO 5.2) — não escreva a formatação aqui dentro. */}
+      </View>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    // TODO 8: padding, borderRadius e backgroundColor — TODOS vindos de `cores` e `espaco` (../theme).
-    //         Nenhum hex e nenhum número solto neste arquivo.
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: cores.cartao,
     borderRadius: espaco.sm,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#e0e0e0',
+    borderColor: cores.textoFraco,
     padding: espaco.md,
-    gap: espaco.xs,
+    gap: espaco.sm,
   },
   destaque: {
-    // TODO 10: o que muda no destaque? Borda? Fundo? Escolha e justifique no README.
     borderColor: cores.primaria,
     borderWidth: 2,
   },
+  miniatura: {
+    width: 64,
+    height: 64,
+    borderRadius: espaco.sm,
+    backgroundColor: cores.fundo,
+  },
+  miniaturaVazia: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: cores.textoFraco,
+    borderStyle: 'dashed',
+  },
+  corpo: { flex: 1, gap: espaco.xs },
   meta: {
     fontSize: tipografia.legenda.fontSize,
     textTransform: 'capitalize',
   },
+  local: tipografia.legenda,
 });

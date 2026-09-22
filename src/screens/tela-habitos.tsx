@@ -1,18 +1,3 @@
-// Atividade 1 · Aula 4 — a tela principal: a lista de verdade.
-//
-// Ainda não está ligada a nenhuma navegação — a Aula 4 não cobre isso.
-// Para pré-visualizar enquanto você desenvolve: troque temporariamente o conteúdo
-// renderizado dentro de <View style={styles.conteudo}> em App.tsx por <TelaHabitos />,
-// e desfaça a troca antes de entregar (ou promova-a, se a tela já for a principal).
-//
-// RESTRIÇÕES DA ENTREGA (é aqui que a nota se decide):
-//   - Nenhuma ScrollView envolvendo a lista. Conteúdo antes/depois vai em
-//     ListHeaderComponent / ListFooterComponent.
-//   - Nenhuma mutação de estado. Toda mudança cria array novo e objeto novo.
-//   - Nenhum <Button> nem <Text onPress> onde o Pressable é a resposta.
-//   - Nenhum `margin` para espaçar itens de lista.
-//   - Nenhum `any`.
-//   - Agrupar e filtrar moram em `src/lib/`, não aqui.
 import { useState } from 'react';
 import { SectionList, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -24,11 +9,6 @@ import { agrupar, filtrarPorTitulo, type Secao } from '../lib/agrupar';
 import { cores, espaco, tipografia } from '../theme';
 import type { Habito } from '../types/habito';
 
-// TODO 4.14: o cabeçalho da lista — o <TextInput> de busca, com `styles.busca`.
-//          Ele precisa ser declarado DE UM JEITO QUE NÃO REMONTE a cada render, senão
-//          o campo perde o foco a cada tecla digitada. Esse é o sintoma exato do erro;
-//          se você vir o teclado fechando sozinho, é isto.
-//          (Uma arrow anônima em `ListHeaderComponent={() => <.../>}` é o jeito errado.)
 function Cabecalho({busca, onBuscaChange}: {busca: string; onBuscaChange: (busca: string) => void;}) {
   return (
     <TextInput
@@ -44,10 +24,11 @@ export function TelaHabitos() {
   const [habitos, setHabitos] = useState<Habito[]>(HABITOS);
   const [busca, setBusca] = useState('');
   const [atualizando, setAtualizando] = useState(false);
+  // Aula 5 — a tela de registro aparece por CONDICIONAL, não por navegação
+  // (`expo-router` é Aula 7). Este booleano é a "navegação" que temos.
+  const [registrando, setRegistrando] = useState(false);
 
   function alternar(id: string) {
-    // TODO 4.15: alternar o status do hábito — array NOVO, objeto NOVO. Nada de mutação.
-    //          Se a tela não mudar ao tocar, você mutou.
     setHabitos((prev) =>
       prev.map((h) =>
         h.id === id
@@ -58,7 +39,6 @@ export function TelaHabitos() {
   }
 
   function remover(id: string) {
-    // TODO 4.16: remover o hábito da lista — array novo.
     setHabitos((prev) => prev.filter((h) => h.id !== id));
   }
 
@@ -71,18 +51,28 @@ export function TelaHabitos() {
     setAtualizando(false);
   }
 
-  // TODO 4.18: filtrar E ENTÃO agrupar — nesta ordem, usando as funções de `../lib/agrupar`.
-  //          A ordem importa e é uma das três perguntas do README (TODO 72).
-  //          Dica de por que importa: pense no que acontece com um grupo cujos itens
-  //          foram todos descartados pelo filtro.
-  // const secoes: Secao[] = [];
+  function adicionar(novo: Habito) {
+    // TODO 5.22: acrescente o hábito recém-registrado à lista — array NOVO, como na
+    //           Aula 4 — e feche a tela de registro.
+    //           Pense em onde ele deve entrar: no fim da lista o usuário não vê o
+    //           resultado do que acabou de fazer sem rolar até lá.
+    //           ⚠️ Depois de implementar, TESTE o "puxar para atualizar": do jeito que
+    //           `recarregar()` está escrito hoje, o hábito que custou duas permissões ao
+    //           usuário some no primeiro puxão. Decida o que fazer a respeito.
+  }
+
   const secoes = agrupar(filtrarPorTitulo(habitos, busca));
+
+  // TODO 5.21: quando `registrando` for true, devolva a <TelaRegistrarHabito /> no lugar
+  //           da lista — é assim que se troca de tela sem navegação (Aula 7).
+  //           Ela precisa de duas funções: o que fazer com o hábito salvo (`adicionar`)
+  //           e o que fazer no cancelamento.
+  //           Enquanto ela NÃO está montada, a câmera do aparelho está desligada.
 
   return (
     <View style={styles.tela}>
       <SectionList
         sections={secoes}
-        // TODO 4.19: renderItem — o <ItemHabito>, recebendo `alternar` e `remover`.
         renderItem={({ item }) => (
           <ItemHabito
             habito={item}
@@ -90,36 +80,18 @@ export function TelaHabitos() {
             onRemover={remover}
           />
         )}
-        // TODO 4.20: renderSectionHeader — o título da seção, com `styles.cabecalhoSecao`.
-        //          A cor de fundo dele não é decoração: sem ela, o conteúdo passa por
-        //          baixo do cabeçalho grudado e o texto vira uma sopa ilegível.
         renderSectionHeader={({ section }) => (
           <Text style={styles.cabecalhoSecao}>{section.title}</Text>
         )}
-        // TODO 4.21: separador entre itens — `ItemSeparatorComponent`, nunca `margin`.
         ItemSeparatorComponent={() => <View style={styles.separador} />}
-        // TODO 4.22: ListEmptyComponent — a <ListaVazia>, recebendo o que ela precisa para
-        //          distinguir "primeiro acesso" de "busca sem resultado" (TODO 4.21).
         ListEmptyComponent={() => <ListaVazia primeiroAcesso={false} onLimparBusca={recarregar} />}
-        // TODO 4.23: `stickySectionHeadersEnabled` — declare explicitamente.
-        //          O default é diferente em iOS e Android; não deixe a decisão de produto
-        //          para o sistema operacional.
         stickySectionHeadersEnabled
-        // TODO 4.24: `refreshing` e `onRefresh` — o estado "atualizando" da lista.
         refreshing={atualizando}
         onRefresh={recarregar}
-        // TODO 4.25: ligue aqui o cabeçalho de busca declarado lá em cima.
         ListHeaderComponent={<Cabecalho busca={busca} onBuscaChange={setBusca} />}
         contentContainerStyle={styles.conteudo}
       />
-
-      {/* TODO 1.26: o <BotaoAcao> precisa aparecer em PELO MENOS DOIS lugares desta tela,
-          substituindo qualquer <Button> ou <Text onPress> que tenha sobrado da Aula 3.
-          Sugestões: "Novo hábito" aqui no rodapé e "Limpar busca" dentro da <ListaVazia>. */}
-        <BotaoAcao
-          rotulo="Novo hábito"
-          onPressionar={recarregar}
-        />
+        <BotaoAcao rotulo="Novo hábito" onPressionar={() => setRegistrando(true)} />
     </View>
   );
 }

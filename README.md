@@ -132,3 +132,101 @@ Notas sobre o esqueleto desta aula:
 
 <!-- TODO 73: cite os defaults de iOS e Android e diga qual comportamento vocês fixaram
      no código — e por que deixar no default seria terceirizar uma decisão de produto. -->
+
+## Estado atual — Aula 5
+
+Esqueletos da Aula 5 (**sensores, GPS e câmera** — `expo-location`, `expo-sensors`,
+`expo-camera`, `expo-image`): os exercícios guiados da Parte 1, a **Atividade 1** (a tela
+"Registrar hábito"), a **Atividade 2** (auditoria) e a **Atividade 3** (bônus).
+
+Os TODOs dos **exercícios guiados** seguem a numeração do enunciado (**1 a 24**). Os das
+**atividades aplicadas** usam o prefixo da aula (**5.1 a 5.33**), como na Aula 4.
+
+> 🔴 **Precisa de aparelho físico.** O iOS Simulator não tem câmera, acelerômetro nem
+> giroscópio. O Android Emulator tem sensores virtuais e uma câmera de cena virtual —
+> serve para testar o fluxo, não a experiência. Traga o celular carregado, com o Expo Go
+> instalado e o cabo.
+
+| Onde | O que é | Referência em `exercises.md` | TODOs |
+|---|---|---|---|
+| `exercicios/aula-05/respostas/ex-01-associacao.md` | Qual pacote e qual função, 14 situações | Exercício 1 | tabela em branco |
+| `exercicios/aula-05/respostas/ex-02-caca-ao-erro.md` | Os 7 problemas da tela de câmera de 2023 | Exercício 2 | 7 lacunas |
+| `exercicios/aula-05/ex-03-onde-eu-estou.tsx` | GPS com os três caminhos de falha | Exercício 3 | 1 – 6 |
+| `exercicios/aula-05/ex-04-chacoalhada.tsx` | Acelerômetro e magnitude do vetor | Exercício 4 | 6 – 10 |
+| `exercicios/aula-05/ex-05-camera-previa.tsx` | `CameraView` e os três estados de permissão | Exercício 5 | 11 – 17 |
+| `exercicios/aula-05/ex-06-giroscopio.tsx` | Giroscópio *(casa)* | Exercício 6 | 18 – 22 |
+| `exercicios/aula-05/ex-07-galeria-que-pisca.tsx` | Os 4 defeitos de imagem *(casa)* | Exercício 7 | 23 – 24 |
+| `src/types/habito.ts` | `LocalHabito` + os campos opcionais `local` e `fotoUri` | Atividade 1 · esqueleto 1 | — (dado) |
+| `src/components/CardHabito.tsx` | Miniatura da foto e o local no card | Atividade 1 · esqueleto 2 | 5.1 |
+| `src/lib/formatar-local.ts` | `formatarLocal()` — função pura, sem JSX e sem sensor | Atividade 1 · item 1 | 5.2 |
+| `src/services/localizacao.ts` | A camada que fala com o GPS e devolve a falha exata | Atividade 1 · itens 1 e 4 | 5.3 – 5.8 |
+| `src/components/camera-habito.tsx` | A câmera, com os três estados de permissão | Atividade 1 · item 2 | 5.9 – 5.14 |
+| `src/screens/tela-registrar-habito.tsx` | A tela "Registrar hábito" | Atividade 1 | 5.15 – 5.20 |
+| `src/screens/tela-habitos.tsx` | Abre o registro por condicional e recebe o hábito novo | Atividade 1 · item 3 | 5.21 – 5.22 |
+| `src/components/item-habito.tsx` | Repassa foto, local e `recyclingKey` ao card | Atividade 1 · item 3 | 5.23 |
+| `README.md` (aqui, abaixo) | A seção "Decisões da Aula 5" | Atividade 1 · critérios | 5.24 – 5.27 |
+| `auditoria-aula5.md` | Auditoria da `TelaTreino` | Atividade 2 | esqueleto do relatório |
+| `src/screens/tela-nivel-bolha.tsx` | O nível de bolha *(bônus, opcional)* | Atividade 3 | 5.28 – 5.33 |
+
+Notas sobre o esqueleto desta aula:
+
+- **Os exercícios guiados ficam fora do app.** `exercicios/aula-05/` tem `tsconfig.json`
+  próprio e não entra no build do Expo (`npx tsc --noEmit -p exercicios/aula-05`). Cada um
+  pode ser pré-visualizado descomentando a linha correspondente em `App.tsx`.
+- **Os Exercícios 1 e 2 são no papel**, e por isso viram Markdown em
+  `exercicios/aula-05/respostas/` — mesma convenção da Aula 4.
+- **O estado inicial compila limpo e roda**, mas não faz o que o exercício pede: onde
+  falta implementação há um valor de espera (uma string vazia, um `return` de falha, uma
+  posição fixa da bolha). É isso que os TODOs cobram.
+- **`app.json` já tem as descrições de permissão** (`infoPlist` do iOS, `permissions` do
+  Android) e os plugins de `expo-location`, `expo-camera` e `expo-sensors`. No Expo Go elas
+  não são obrigatórias; num build de verdade, a ausência delas reprova na App Store.
+- **O contrato de três tempos aparece em branco** no topo de cada arquivo que usa sensor.
+  Preenchê-lo vale 25% da nota da Atividade 1 — não é comentário decorativo.
+
+## Decisões da Aula 5
+
+> Seção exigida pela Atividade 1 (critérios "Uso correto das APIs" e "Honestidade
+> técnica"). Responda **em texto corrido**, com critério — "porque é melhor" não é
+> resposta.
+
+**Qual `Accuracy` vocês escolheram, e por quê?**
+
+<!-- TODO 5.24: diga qual nível vocês usaram no `getCurrentPositionAsync` e o que ele
+     custa em bateria e em tempo de espera comparado ao nível acima e ao abaixo.
+     Lembre qual é a pergunta que o campo precisa responder: "em que academia o treino
+     aconteceu". Diga também como o `accuracy` devolvido aparece na tela. -->
+
+**Os cinco estados de falha: qual mensagem cada um mostra, e o que o usuário faz depois?**
+
+<!-- TODO 5.25: liste os cinco (localização negada, localização bloqueada, serviço
+     desligado, câmera negada, hardware indisponível). Para cada um, a AÇÃO que a
+     mensagem pede do usuário. Se duas mensagens pedem a mesma ação, uma das duas
+     está errada. -->
+
+**O que o app faz quando o usuário nega tudo?**
+
+<!-- TODO 5.26: descreva o que acontece na tela de registro e na lista quando não há nem
+     foto nem local. Diga também por que os dois campos são opcionais no tipo. -->
+
+**Limitações assumidas**
+
+<!-- TODO 5.27: declare o que vocês NÃO resolveram, e por quê. No mínimo:
+     - se algum arquivo abre uma assinatura de sensor, o enunciado exige a frase
+       "esta assinatura não é encerrada ao sair da tela, porque a ferramenta para isso é
+       assunto da Aula 6";
+     - onde a foto vive (cache do app, não galeria) e o que acontece se o sistema limpar
+       o cache;
+     - o que mais vocês souberem que está frágil.
+     Reconhecer a limitação vale ponto; escondê-la desconta. -->
+
+### Aula 5 — Giroscópio x acelerômetro *(resposta escrita do Exercício 6)*
+
+<!-- Com o app rodando e o GIROSCÓPIO ligado, deixe o telefone parado na mesa e anote os
+     valores. Depois faça o mesmo teste com o ACELERÔMETRO (Exercício 4, mostrando a
+     magnitude na tela em vez do booleano).
+
+     Explique, em 3 a 5 linhas: por que um zera e o outro não? E o que isso permite fazer
+     com o acelerômetro que não dá para fazer com o giroscópio?
+
+     Cuidado com o erro comum: o valor que o acelerômetro marca parado NÃO é ruído. -->
