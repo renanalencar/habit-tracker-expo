@@ -9,6 +9,10 @@
 //   2. Uma chacoalhada            → o contador sobe 1, não 8?
 //   3. Chacoalhe em outra direção → conta também? (Se só uma conta, você olhou um eixo só.)
 //   4. Desligue e chacoalhe       → nada acontece?
+//
+// HONESTIDADE TÉCNICA: se você sair desta tela com o sensor ligado, ele CONTINUA ligado.
+// O botão "Desligar sensor" existe justamente porque a ferramenta que faria isso sozinha
+// (o `useEffect` com função de limpeza) é assunto da Aula 6.
 
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -27,8 +31,16 @@ export default function TelaChacoalhada() {
   async function ligar() {
     // TODO 7: confira se o acelerômetro existe neste aparelho.
     //         Se não existir, marque `indisponivel` e saia.
+    // Sem esta checagem a tela fica eternamente "parada" num aparelho sem o sensor —
+    // e é ela que salva quem tentar no iOS Simulator.
+    const disponivel = await Accelerometer.isAvailableAsync();
+    if (!disponivel) {
+      setIndisponivel(true);
+      return;
+    }
 
     // TODO 8: peça o intervalo de atualização.
+    Accelerometer.setUpdateInterval(INTERVALO_MS);
 
     // TODO 9: assine o acelerômetro. Dentro do callback:
     //         a) calcule a MAGNITUDE do vetor (x, y, z) — não olhe um eixo só;
@@ -36,13 +48,31 @@ export default function TelaChacoalhada() {
     //         c) atualize `chacoalhou`;
     //         d) some 1 em `contador` APENAS na transição de "não" para "sim"
     //            (senão você conta 10 chacoalhadas por segundo).
+    const nova = Accelerometer.addListener(({ x, y, z }) => {
+      // A MAGNITUDE do vetor responde "o quanto foi sacudido" independente da orientação.
+      // Olhando só o `x`, uma chacoalhada de cima para baixo passa batido.
+      const magnitude = Math.sqrt(x * x + y * y + z * z);
+      const agora = magnitude > LIMIAR_G;
+
+      setChacoalhou((anterior) => {
+        if (anterior === agora) return anterior;  // nada mudou: não re-renderiza
+        if (agora) setContador((n) => n + 1);     // conta só na SUBIDA (não 10x/segundo)
+        return agora;
+      });
+    });
 
     // TODO 10: guarde a assinatura no estado.
+    setAssinatura(nova);
   }
 
   function desligar() {
     // TODO 11: encerre a assinatura e limpe o estado.
     //         Use o método correto — `removeAllListeners()` está deprecado.
+    // `remove()` na assinatura, e não `removeAllListeners()`: o segundo está deprecado e
+    // ainda derrubaria listeners de outras partes do app.
+    assinatura?.remove();
+    setAssinatura(null);
+    setChacoalhou(false);
   }
 
   return (

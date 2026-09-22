@@ -120,18 +120,37 @@ Notas sobre o esqueleto desta aula:
 
 **Por que `SectionList` e não `FlatList` neste caso?**
 
-<!-- TODO 71: qual é o critério de agrupamento que vocês escolheram (status, período do
-     dia ou categoria), e o que o agrupamento dá ao usuário que a lista plana não daria. -->
+O critério de agrupamento é o **status** (`Pendentes` → `Concluídos` → `Pulados`, em
+`src/lib/agrupar.ts`). Numa lista plana os três estados ficam embaralhados e o usuário
+precisa ler o rótulo de cada item para saber o que ainda falta fazer; com as seções, "o
+que falta" é um bloco inteiro no topo da tela, visível sem leitura item a item. O
+cabeçalho fixo (`stickySectionHeadersEnabled`) mantém essa resposta na tela mesmo depois
+de rolar — é isso que a `FlatList` não daria.
 
 **Onde vocês agrupam os dados, e por que não é dentro do JSX?**
 
-<!-- TODO 72: diga também em que ORDEM vocês filtram e agrupam (TODO 62), e por que essa
-     ordem importa. -->
+O agrupamento mora em `src/lib/agrupar.ts`, em funções puras, e não dentro do JSX: JSX é
+para descrever tela, e uma função que só transforma dado pode ser lida, testada e trocada
+sem abrir um componente. Dentro do render ela também recalcularia tudo a cada toque.
+
+A ordem é **filtrar e depois agrupar** — `agrupar(filtrarPorTitulo(habitos, busca))`. Ela
+importa por dois motivos: agrupar antes significaria montar seções para itens que a busca
+vai descartar (trabalho jogado fora), e, pior, as seções ficariam com a contagem errada —
+apareceria um cabeçalho "Concluídos" sem nenhum item embaixo, que é exatamente o ruído que
+o descarte de grupos vazios existe para evitar.
 
 **O que acontece com o cabeçalho de seção em cada plataforma, e o que vocês decidiram?**
 
-<!-- TODO 73: cite os defaults de iOS e Android e diga qual comportamento vocês fixaram
-     no código — e por que deixar no default seria terceirizar uma decisão de produto. -->
+O default da `SectionList` difere por plataforma: no **iOS** o cabeçalho de seção fica
+**fixo** no topo enquanto a seção rola (`stickySectionHeadersEnabled` é `true`), e no
+**Android** ele **rola junto** com os itens (`false`). Fixamos `stickySectionHeadersEnabled`
+explicitamente no código, ligado nas duas plataformas.
+
+Deixar no default seria terceirizar uma decisão de produto para o sistema operacional: o
+mesmo app responderia "em que grupo eu estou?" de dois jeitos diferentes conforme o
+aparelho, sem que ninguém tivesse decidido isso. Como o agrupamento é por status e a lista
+é longa, saber em que bloco se está enquanto rola é justamente o valor da seção — então o
+comportamento fixo é o certo, e ele é o certo nos dois lugares.
 
 ## Estado atual — Aula 5
 
@@ -192,41 +211,112 @@ Notas sobre o esqueleto desta aula:
 
 **Qual `Accuracy` vocês escolheram, e por quê?**
 
-<!-- TODO 5.24: diga qual nível vocês usaram no `getCurrentPositionAsync` e o que ele
-     custa em bateria e em tempo de espera comparado ao nível acima e ao abaixo.
-     Lembre qual é a pergunta que o campo precisa responder: "em que academia o treino
-     aconteceu". Diga também como o `accuracy` devolvido aparece na tela. -->
+Usamos **`Location.Accuracy.Balanced`** (~100 m) em `src/services/localizacao.ts`. A
+pergunta que o campo precisa responder é "em que academia o treino aconteceu", e uma
+academia ocupa um quarteirão: 100 m distinguem bairros e endereços, que é toda a precisão
+que a tela consome.
+
+O nível acima, `High` (~10 m), liga o GPS em potência cheia e normalmente leva vários
+segundos a mais para fixar sinal — bateria e espera pagos por uma precisão que nenhuma
+parte do app usa; `BestForNavigation` é mais caro ainda e existe para desenhar o trajeto de
+quem está em movimento. O nível abaixo, `Low` (~1 km), é o mais barato dos três, mas a essa
+escala duas academias do mesmo bairro viram o mesmo ponto, que é exatamente o erro que não
+podemos cometer.
+
+O `accuracy` devolvido **não é descartado**: ele vira o campo `precisaoMetros` do
+`LocalHabito` e aparece na tela como **raio**, escrito por `formatarLocal()` —
+`📍 -8.0632, -34.8711 · precisão de ± 87 m`. Como `coords.accuracy` é `number | null`, há um
+`?? 0` na leitura. A coordenada é arredondada em 4 casas decimais (~11 m) porque mais casas
+seriam inventar uma certeza que o aparelho não tem.
 
 **Os cinco estados de falha: qual mensagem cada um mostra, e o que o usuário faz depois?**
 
-<!-- TODO 5.25: liste os cinco (localização negada, localização bloqueada, serviço
-     desligado, câmera negada, hardware indisponível). Para cada um, a AÇÃO que a
-     mensagem pede do usuário. Se duas mensagens pedem a mesma ação, uma das duas
-     está errada. -->
+São cinco situações, cinco mensagens e — o ponto todo — **cinco ações diferentes**:
+
+| Situação | Onde é decidida | O que a mensagem diz | Ação do usuário |
+|---|---|---|---|
+| Localização **negada** (`status !== 'granted'`, `canAskAgain: true`) | `services/localizacao.ts` → `'permissao-negada'` | "Sem a localização não dá para registrar onde o treino aconteceu. Toque em *Usar minha localização* de novo e escolha *Permitir*." | Tocar no botão de novo e aceitar o diálogo |
+| Localização **bloqueada** (`canAskAgain: false`) | `services/localizacao.ts` → `'permissao-bloqueada'` | "A permissão está bloqueada… o diálogo não vai mais aparecer sozinho." | Sair do app e abrir Configurações → Habit Tracker → Localização |
+| **Serviço** de localização desligado (`hasServicesEnabledAsync()` false) | `services/localizacao.ts` → `'servico-desligado'` | "A localização do aparelho está desligada." | Ligar o GPS nas configurações rápidas — não mexer em permissão nenhuma |
+| **Câmera negada** | `components/camera-habito.tsx` | Explica para que serve a câmera e onde a foto fica; botão "Permitir câmera" quando `canAskAgain`, texto de Configurações quando não | Tocar em "Permitir câmera" — ou "Salvar sem foto", que é a saída oferecida na mesma tela |
+| **Hardware indisponível** (GPS que não responde; acelerômetro ausente) | `localizacao.ts` → `'hardware-indisponivel'`; `isAvailableAsync()` no nível de bolha | "Não foi possível ler o GPS deste aparelho. Você pode salvar o hábito sem o local." | Nenhuma configuração resolve: a ação é seguir sem o recurso |
+
+Note que nenhuma das cinco pede a mesma coisa. "Tocar de novo" e "abrir as Configurações"
+parecem próximas, mas são opostas: no segundo caso o botão nunca mais vai funcionar, e
+mandar o usuário tocar nele seria mentir.
 
 **O que o app faz quando o usuário nega tudo?**
 
-<!-- TODO 5.26: descreva o que acontece na tela de registro e na lista quando não há nem
-     foto nem local. Diga também por que os dois campos são opcionais no tipo. -->
+Nada quebra, e nada fica pela metade.
+
+Na **tela de registro**, os dois blocos ("Onde foi" e "Como foi") continuam funcionando
+como blocos opcionais: sem local nem falha, o texto diz "Opcional. Sem localização o hábito
+é salvo do mesmo jeito"; sem foto, ele diz que é opcional e **onde a foto vai parar** (cache
+do app, nem galeria nem internet). O botão "Salvar hábito" depende **só do título** — nunca
+de permissão. Na tela da câmera negada há um botão "Salvar sem foto" que fecha a câmera e
+devolve o usuário ao formulário.
+
+Na **lista**, o `CardHabito` reserva o mesmo espaço da miniatura com uma moldura tracejada
+quando `fotoUri` é `undefined`, para que os cards não fiquem com alturas diferentes, e
+simplesmente não renderiza a linha de local quando `local` é `undefined`. O
+`accessibilityLabel` do item diz "sem foto" e "sem localização" em palavras, porque o leitor
+de tela não enxerga a moldura vazia.
+
+Os dois campos são **opcionais no tipo** (`local?`, `fotoUri?`) porque é o tipo que decide
+se o app pode funcionar para quem disse "não". Se `Habito` exigisse os dois, seria
+impossível *construir* o objeto sem as permissões — o erro subiria do TypeScript para o
+runtime e o app quebraria justamente para o usuário mais cuidadoso. Por isso também eles
+entram no objeto por espalhamento condicional (`...(local ? { local } : {})`): o campo fica
+**ausente**, e não `null` fingindo ser um dado.
 
 **Limitações assumidas**
 
-<!-- TODO 5.27: declare o que vocês NÃO resolveram, e por quê. No mínimo:
-     - se algum arquivo abre uma assinatura de sensor, o enunciado exige a frase
-       "esta assinatura não é encerrada ao sair da tela, porque a ferramenta para isso é
-       assunto da Aula 6";
-     - onde a foto vive (cache do app, não galeria) e o que acontece se o sistema limpar
-       o cache;
-     - o que mais vocês souberem que está frágil.
-     Reconhecer a limitação vale ponto; escondê-la desconta. -->
+**1. Assinaturas de sensor.** Três arquivos abrem uma torneira com `addListener`:
+`exercicios/aula-05/ex-04-chacoalhada.tsx`, `exercicios/aula-05/ex-06-giroscopio.tsx` e
+`src/screens/tela-nivel-bolha.tsx` (Atividade 3). Os três têm um `remove()` no mesmo
+arquivo, ligado a um botão "Desligar". Mas, declarando com todas as letras: **esta
+assinatura não é encerrada ao sair da tela, porque a ferramenta para isso é assunto da Aula
+6.** Quem sair com o sensor ligado o deixa ligado, consumindo bateria e disparando
+`setState` numa tela que ninguém está vendo. O botão "Desligar" existe exatamente porque a
+limpeza automática ainda não existe para nós. A **Atividade 1** (a entrega principal) não
+tem esse problema: ela não usa `watchPositionAsync` nem `addListener` — só leituras
+pontuais.
+
+**2. Onde a foto vive.** A foto fica no **cache do app** (`takePictureAsync` devolve um
+`file://` dentro do diretório de cache), não na galeria. Consequência: se o sistema limpar o
+cache por falta de espaço, ou se o app for reinstalado, o `fotoUri` guardado no estado
+aponta para um arquivo que não existe mais e a miniatura fica vazia. Não salvamos na galeria
+de propósito — o enunciado proíbe, e o pacote para isso não está no catálogo da disciplina.
+
+**3. Nada é persistido.** A lista inteira vive em `useState`. Fechou o app, perdeu tudo,
+inclusive os hábitos que custaram duas permissões ao usuário. Persistência é assunto de
+outra aula.
+
+**4. O "puxar para atualizar" é um meio-termo.** `recarregar()` restaura o mock mas
+**preserva** os hábitos criados na sessão (os que não estão em `HABITOS`), em vez de
+descartá-los como fazia antes. É uma decisão de produto tomada dentro de uma limitação, não
+uma sincronização de verdade — sem backend, "atualizar" não tem o que buscar.
+
+**5. Sem reverse geocoding.** A tela mostra coordenada arredondada e raio, não "Boa Viagem,
+Recife". `reverseGeocodeAsync()` existe e resolveria, mas é uma chamada cara, com limite de
+frequência — e, do jeito que a tela está, ela não traria informação que mude alguma decisão
+do usuário.
+
+**6. O limiar de chacoalhada é empírico.** `LIMIAR_G = 1.8` foi calibrado num aparelho só.
+Parado, a magnitude fica em ≈ 1 g (a gravidade); 1.8 exige quase o dobro. Em outro aparelho
+pode ser preciso subir para 2.2 ou descer para 1.5.
 
 ### Aula 5 — Giroscópio x acelerômetro *(resposta escrita do Exercício 6)*
 
-<!-- Com o app rodando e o GIROSCÓPIO ligado, deixe o telefone parado na mesa e anote os
-     valores. Depois faça o mesmo teste com o ACELERÔMETRO (Exercício 4, mostrando a
-     magnitude na tela em vez do booleano).
+Parado na mesa, o **giroscópio** marca ≈ 0 nos três eixos: ele mede **velocidade angular**,
+e nada está girando. O **acelerômetro**, no mesmo teste, marca magnitude ≈ **1 g**: ele mede
+aceleração linear **somada à gravidade**, e a gravidade não desliga. Isso não é ruído nem
+defeito de calibração — é um sinal real, constante e útil; confundir os dois é o que leva a
+filtrar fora justamente a informação que serve.
 
-     Explique, em 3 a 5 linhas: por que um zera e o outro não? E o que isso permite fazer
-     com o acelerômetro que não dá para fazer com o giroscópio?
-
-     Cuidado com o erro comum: o valor que o acelerômetro marca parado NÃO é ruído. -->
+A consequência prática é que o acelerômetro permite descobrir **inclinação com o aparelho
+parado**: aquele vetor de 1 g aponta sempre para baixo, e a forma como ele se reparte entre
+`x`, `y` e `z` revela a orientação do aparelho. É exatamente disso que vive o nível de bolha
+da Atividade 3. O giroscópio não consegue fazer isso — parado, ele não tem nada a informar.
+Em compensação, ele responde muito melhor a **rotação rápida**, que o acelerômetro só
+detecta de forma indireta.

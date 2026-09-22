@@ -60,6 +60,15 @@ export function CardHabito({
                   decimais não é informação para o usuário.
                   A formatação é função pura e mora em `lib/formatar-local.ts`
                   (TODO 5.2) — não escreva a formatação aqui dentro. */}
+
+        {/* A formatação é função pura e mora em `lib/formatar-local.ts`: o card só
+            decide SE mostra, não COMO. Sem local, nada é renderizado — um hábito sem
+            local ainda é um hábito. */}
+        {local && (
+          <Text style={styles.local} numberOfLines={1}>
+            {formatarLocal(local)}
+          </Text>
+        )}
       </View>
     </Pressable>
   );

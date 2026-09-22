@@ -8,12 +8,8 @@ import type { Habito } from '../types/habito';
 export type Secao = { title: string; data: Habito[] };
 
 export function agrupar(habitos: Habito[]): Secao[] {
-  // TODO 4.2: agrupe pelo critério que o grupo escolheu (status, período do dia ou categoria).
-  //          Cada seção precisa do campo `data` (é o nome que a SectionList exige)
-  //          e de um título legível para o usuário.
+  // Critério de agrupamento escolhido: STATUS. `data` é o nome que a SectionList exige.
   const ordem = ['pendente', 'concluido', 'pulado'] as const;
-  // TODO 4.3: descarte os grupos vazios. Um cabeçalho de seção sem nenhum item embaixo
-  //          é ruído na tela.
     const titulos = {
     pendente: 'Pendentes',
     concluido: 'Concluídos',
@@ -28,9 +24,7 @@ export function agrupar(habitos: Habito[]): Secao[] {
   });
 
   return secoes.filter(secao => secao.data.length > 0);
-  // TODO 4.4: a ordem dos grupos é uma DECISÃO, não um efeito colateral do `Object.keys`.
-  //          Escreva num comentário aqui qual foi a ordem escolhida e por quê.
-
+  // A ordem dos grupos é uma DECISÃO, não um efeito colateral do `Object.keys`.
   // Ordem escolhida: Pendentes -> Concluídos -> Pulados.
   // Por quê: O foco primário do usuário ao abrir o app deve ser as tarefas que 
   // ainda precisam ser feitas (Pendentes). Depois vêm as que já foram finalizadas 
@@ -38,9 +32,8 @@ export function agrupar(habitos: Habito[]): Secao[] {
 }
 
 export function filtrarPorTitulo(habitos: Habito[], busca: string): Habito[] {
-  // TODO 4.5: busca por título, SEM diferenciar maiúscula de minúscula.
-  //          Busca vazia (ou só espaços) devolve tudo — e não uma lista vazia,
-  //          senão o primeiro acesso já cai no estado "nada encontrado".
+  // Busca vazia (ou só espaços) devolve TUDO — senão o primeiro acesso já cai no
+  // estado "nada encontrado".
     if (!busca.trim()) {
     return habitos;
   }

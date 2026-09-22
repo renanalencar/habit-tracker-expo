@@ -13,18 +13,9 @@ export type BotaoAcaoProps = {
 };
 
 export function BotaoAcao({ rotulo, onPressionar, desabilitado = false }: BotaoAcaoProps) {
-  // TODO 4.13: traga a implementação que você fez no Exercício 3
-  //          (`exercicios/aula-04/ex-03-botao-acao.tsx`, TODOs 7 a 14) e adapte-a:
-  //          aqui NÃO pode haver hex solto — as cores vêm de `../theme`.
-  //          São os mesmos oito pontos: a ação em `onPress`, `disabled`, `hitSlop`,
-  //          `android_ripple`, papel e rótulo de acessibilidade, `style` como função
-  //          de `{ pressed }`, e os dois estilos de variante abaixo.
-  // return (
-  //   <Pressable style={styles.botao}>
-  //     <Text style={styles.rotulo}>{rotulo}</Text>
-  //   </Pressable>
-  // );
-    return (
+  // Sem hex solto aqui: as cores vêm de `../theme`. A ação vai em `onPress` (nunca em
+  // `onPressIn`), e `style` é função de `{ pressed }`.
+  return (
     <Pressable
       style={({ pressed }) => [styles.botao, pressed && styles.botaoPressionado]}
       onPress={onPressionar}
@@ -50,11 +41,9 @@ const styles = StyleSheet.create({
     marginVertical: espaco.xs,  
   },
   botaoPressionado: {
-    // TODO 4.14: como o botão fica ENQUANTO o dedo está nele. Visível, mas discreto.
     opacity: 0.8,
   },
   botaoDesabilitado: {
-    // TODO 4.15: aparência de desligado.
     opacity: 0.5,
   },
   rotulo: { color: cores.cartao, fontSize: 16, fontWeight: '600' },

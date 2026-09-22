@@ -1,7 +1,6 @@
 export const cores = {
   fundo: '#FEF7EE',
   cartao: '#FFFFFF',
-  // TODO 1: complete com texto, textoFraco, primaria, sucesso, erro
   texto: '#1A1A1A',
   textoFraco: '#7A7A7A',
   primaria: '#FF7F50',
@@ -10,8 +9,7 @@ export const cores = {
 } as const;
 
 export const espaco = {
-  // TODO 2: escala de no mínimo 4 degraus (xs, sm, md, lg).
-  //         Escolha uma progressão e seja consistente — 4/8/16/24 é um bom default.
+  // Progressão 4/8/16/24: cada degrau é o dobro do anterior.
   xs: 4,
   sm: 8,
   md: 16,
@@ -19,8 +17,6 @@ export const espaco = {
 } as const;
 
 export const tipografia = {
-  // TODO 3: titulo, corpo, legenda. Cada um é um objeto de estilo de TEXTO.
-  //         A legenda pode reaproveitar `cores.textoFraco`.
   titulo: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -36,6 +32,5 @@ export const tipografia = {
   },
 } as const;
 
-// TODO 4: por que este arquivo usa `as const` e o StyleSheet.create do componente NÃO usa?
-//         Responda em um comentário de uma linha aqui mesmo.
+// Por que este arquivo usa `as const` e o StyleSheet.create do componente NÃO usa:
 // `as const` força os valores a serem literais exatos para o TypeScript, enquanto `StyleSheet.create` já tipa e otimiza os estilos internamente.

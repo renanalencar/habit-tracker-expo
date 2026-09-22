@@ -79,7 +79,8 @@ export default function App() {
     {/* <TelaNivelBolha /> */}
 
     {/* A tela principal (Aula 4) — o botão "Novo hábito" é a porta de entrada da
-        Atividade 1 da Aula 5, depois que o TODO 5.21 estiver feito. */}
+        Atividade 1 da Aula 5: ele troca a lista pela tela de registro por condicional,
+        sem navegação. */}
     <TelaHabitos />
   </View>
   );
