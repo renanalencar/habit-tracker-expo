@@ -22,22 +22,22 @@ export default function TelaFotoHabito() {
   const [fotoUri, setFotoUri] = useState<string | null>(null);
 
   async function tirarFoto() {
-    // TODO 11: proteja contra a referência ainda null.
-    // TODO 12: tire a foto com qualidade 0.7 e guarde o uri.
+    // TODO 12: proteja contra a referência ainda null.
+    // TODO 13: tire a foto com qualidade 0.7 e guarde o uri.
     //         Não peça base64 — você só vai exibir.
   }
 
-  // TODO 13: primeiro estado — a resposta da permissão ainda não chegou.
+  // TODO 14: primeiro estado — a resposta da permissão ainda não chegou.
   //         Sem isto, a tela de "sem permissão" PISCA para quem já autorizou.
 
-  // TODO 14: segundo estado — sabemos, e não temos.
+  // TODO 15: segundo estado — sabemos, e não temos.
   //         Devolva uma tela que EXPLIQUE por que o app precisa da câmera,
   //         com um Pressable que chama pedirPermissao.
 
-  // TODO 15: terceiro estado — temos.
+  // TODO 16: terceiro estado — temos.
   return (
     <View style={estilos.tela}>
-      {/* TODO 16: renderize o CameraView. Ele precisa de:
+      {/* TODO 17: renderize o CameraView. Ele precisa de:
                   - a referência (use o callback ref com setCamera)
                   - o estilo (que precisa dar ALTURA a ele)
                   - a prop de qual câmera usar */}
@@ -54,7 +54,7 @@ export default function TelaFotoHabito() {
           <Text style={estilos.textoBotao}>Virar câmera</Text>
         </Pressable>
 
-        {/* TODO 17: quando houver fotoUri, exiba a prévia com o Image do expo-image.
+        {/* TODO 18: quando houver fotoUri, exiba a prévia com o Image do expo-image.
                     contentFit explícito e uma transição de 300 ms. */}
       </View>
     </View>

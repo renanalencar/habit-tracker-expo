@@ -9,16 +9,18 @@
 //   c) a mesma imagem é RECARREGADA toda vez que volta à tela;
 //   d) uma prop NÃO FAZ NADA.
 //
-// TODO 23: encontre os quatro e corrija.
-//          Dica: três deles se resolvem trocando UM import e acrescentando TRÊS props.
-//          O quarto é uma prop que só faz sentido depois da troca de import.
+// A DICA do enunciado: três dos quatro defeitos se resolvem trocando UM import e
+// acrescentando TRÊS props. O quarto é uma prop que só faz sentido depois da troca.
+
+// TODO 24: encontre os quatro defeitos e corrija. (Há uma dica no enunciado.)
+
+// TODO 25: escreva aqui, em 2–3 linhas, qual dos quatro é o MAIS GRAVE para o
+//          usuário e por quê. Não é "o mais feio" — é o que causa mais dano a
+//          quem usa a galeria.
 //
-// TODO 24: escreva aqui, em 2–3 linhas, qual dos quatro é o MAIS GRAVE para o usuário
-//          e por quê. (Não é "o mais feio" — é o que causa mais dano a quem usa.)
-//
-//   Resposta: ________________________________________________________________
-//   _________________________________________________________________________
-//   _________________________________________________________________________
+//   Resposta: ______________________________________________________________
+//   ________________________________________________________________________
+//   ________________________________________________________________________
 
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { Image } from 'react-native';

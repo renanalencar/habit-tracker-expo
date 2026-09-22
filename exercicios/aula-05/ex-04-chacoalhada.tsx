@@ -25,23 +25,23 @@ export default function TelaChacoalhada() {
   const [indisponivel, setIndisponivel] = useState(false);
 
   async function ligar() {
-    // TODO 6: confira se o acelerômetro existe neste aparelho.
+    // TODO 7: confira se o acelerômetro existe neste aparelho.
     //         Se não existir, marque `indisponivel` e saia.
 
-    // TODO 7: peça o intervalo de atualização.
+    // TODO 8: peça o intervalo de atualização.
 
-    // TODO 8: assine o acelerômetro. Dentro do callback:
+    // TODO 9: assine o acelerômetro. Dentro do callback:
     //         a) calcule a MAGNITUDE do vetor (x, y, z) — não olhe um eixo só;
     //         b) compare com LIMIAR_G;
     //         c) atualize `chacoalhou`;
     //         d) some 1 em `contador` APENAS na transição de "não" para "sim"
     //            (senão você conta 10 chacoalhadas por segundo).
 
-    // TODO 9: guarde a assinatura no estado.
+    // TODO 10: guarde a assinatura no estado.
   }
 
   function desligar() {
-    // TODO 10: encerre a assinatura e limpe o estado.
+    // TODO 11: encerre a assinatura e limpe o estado.
     //         Use o método correto — `removeAllListeners()` está deprecado.
   }
 

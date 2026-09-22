@@ -139,7 +139,7 @@ Esqueletos da Aula 5 (**sensores, GPS e câmera** — `expo-location`, `expo-sen
 `expo-camera`, `expo-image`): os exercícios guiados da Parte 1, a **Atividade 1** (a tela
 "Registrar hábito"), a **Atividade 2** (auditoria) e a **Atividade 3** (bônus).
 
-Os TODOs dos **exercícios guiados** seguem a numeração do enunciado (**1 a 24**). Os das
+Os TODOs dos **exercícios guiados** seguem a numeração do enunciado (**1 a 25**). Os das
 **atividades aplicadas** usam o prefixo da aula (**5.1 a 5.33**), como na Aula 4.
 
 > 🔴 **Precisa de aparelho físico.** O iOS Simulator não tem câmera, acelerômetro nem
@@ -152,10 +152,10 @@ Os TODOs dos **exercícios guiados** seguem a numeração do enunciado (**1 a 24
 | `exercicios/aula-05/respostas/ex-01-associacao.md` | Qual pacote e qual função, 14 situações | Exercício 1 | tabela em branco |
 | `exercicios/aula-05/respostas/ex-02-caca-ao-erro.md` | Os 7 problemas da tela de câmera de 2023 | Exercício 2 | 7 lacunas |
 | `exercicios/aula-05/ex-03-onde-eu-estou.tsx` | GPS com os três caminhos de falha | Exercício 3 | 1 – 6 |
-| `exercicios/aula-05/ex-04-chacoalhada.tsx` | Acelerômetro e magnitude do vetor | Exercício 4 | 6 – 10 |
-| `exercicios/aula-05/ex-05-camera-previa.tsx` | `CameraView` e os três estados de permissão | Exercício 5 | 11 – 17 |
-| `exercicios/aula-05/ex-06-giroscopio.tsx` | Giroscópio *(casa)* | Exercício 6 | 18 – 22 |
-| `exercicios/aula-05/ex-07-galeria-que-pisca.tsx` | Os 4 defeitos de imagem *(casa)* | Exercício 7 | 23 – 24 |
+| `exercicios/aula-05/ex-04-chacoalhada.tsx` | Acelerômetro e magnitude do vetor | Exercício 4 | 7 – 11 |
+| `exercicios/aula-05/ex-05-camera-previa.tsx` | `CameraView` e os três estados de permissão | Exercício 5 | 12 – 18 |
+| `exercicios/aula-05/ex-06-giroscopio.tsx` | Giroscópio *(casa)* | Exercício 6 | 19 – 23 |
+| `exercicios/aula-05/ex-07-galeria-que-pisca.tsx` | Os 4 defeitos de imagem *(casa)* | Exercício 7 | 24 – 25 |
 | `src/types/habito.ts` | `LocalHabito` + os campos opcionais `local` e `fotoUri` | Atividade 1 · esqueleto 1 | — (dado) |
 | `src/components/CardHabito.tsx` | Miniatura da foto e o local no card | Atividade 1 · esqueleto 2 | 5.1 |
 | `src/lib/formatar-local.ts` | `formatarLocal()` — função pura, sem JSX e sem sensor | Atividade 1 · item 1 | 5.2 |

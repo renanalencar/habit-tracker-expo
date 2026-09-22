@@ -24,14 +24,14 @@ export default function TelaGiroscopio() {
   const [girandoRapido, setGirandoRapido] = useState(false);
 
   async function ligar() {
-    // TODO 18: cheque disponibilidade, peça intervalo de 100 ms e assine.
-    // TODO 19: guarde x, y e z no estado.
-    // TODO 20: marque `girandoRapido` quando a magnitude passar de 3 rad/s.
-    // TODO 21: guarde a assinatura.
+    // TODO 19: cheque disponibilidade, peça intervalo de 100 ms e assine.
+    // TODO 20: guarde x, y e z no estado.
+    // TODO 21: marque `girandoRapido` quando a magnitude passar de 3 rad/s.
+    // TODO 22: guarde a assinatura.
   }
 
   function desligar() {
-    // TODO 22: encerre.
+    // TODO 23: encerre.
   }
 
   return (
