@@ -1,0 +1,18 @@
+// Atividades 1 e 2 — Layout Raiz
+// Onde: src/app/_layout.tsx
+
+import { Stack } from 'expo-router';
+
+export default function LayoutRaiz() {
+  return (
+    <Stack screenOptions={{ headerTintColor: '#f26522' }}>
+      <Stack.Screen name="index" options={{ title: 'Meus hábitos' }} />
+
+      {/* TODO A1: declare o Stack.Screen para 'registrar-foto' (título: 'Foto do hábito', headerBackTitle: 'Hábitos') */}
+
+      {/* TODO A1: declare o Stack.Screen para 'sobre' (título: 'Sobre o app') */}
+
+      {/* TODO A2: declare o Stack.Screen para 'galeria' (título: 'Galeria do hábito') */}
+    </Stack>
+  );
+}

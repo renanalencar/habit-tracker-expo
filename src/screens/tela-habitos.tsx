@@ -117,9 +117,14 @@ export function TelaHabitos() {
         contentContainerStyle={styles.conteudo}
       />
       <BotaoAcao rotulo="Novo hábito" onPressionar={() => setRegistrando(true)} />
+      {/* TODO A1 / A2: adicione aqui a navegação para as novas rotas:
+          - Link para '/sobre' e Link para '/galeria' (Atividade 2)
+          - router.push('/registrar-foto') ou Link para '/registrar-foto' */}
     </View>
   );
 }
+
+export default TelaHabitos;
 
 const styles = StyleSheet.create({
   tela: { flex: 1, backgroundColor: cores.fundo, borderRadius: espaco.lg },

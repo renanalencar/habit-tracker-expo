@@ -2,7 +2,7 @@
   "name": "habit-tracker-expo",
   "version": "1.0.0",
   "private": true,
-  "main": "index.ts",
+  "main": "expo-router/entry",
   "dependencies": {
     "expo": "^54.0.37",
     "expo-camera": "~17.0.10",

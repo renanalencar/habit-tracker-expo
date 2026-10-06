@@ -320,3 +320,51 @@ parado**: aquele vetor de 1 g aponta sempre para baixo, e a forma como ele se re
 da Atividade 3. O giroscópio não consegue fazer isso — parado, ele não tem nada a informar.
 Em compensação, ele responde muito melhor a **rotação rápida**, que o acelerômetro só
 detecta de forma indireta.
+
+## Estado atual — Aula 6
+
+Scaffolds e resoluções da Aula 6 (**`expo-image-picker`** e **Expo Router**).
+
+A aula é dividida em duas partes:
+- **Parte 1 — Exercícios Guiados:** para prática e demonstração no `sandbox-aula6`, organizados em `exercicios/aula-06/guiados/` contendo pastas separadas para `scaffolds/` (esqueletos para o aluno completar) e `resolucoes/` (gabarito completo rodando).
+- **Parte 2 — Atividades Aplicadas:** no projeto `habit-tracker-expo` (branch `feature/aula_06_navigation`), com os scaffolds e `// TODO` presentes diretamente em `src/app/` e `src/components/` (e uma cópia de referência em `exercicios/aula-06/aplicados/scaffolds/`).
+
+### Parte 1 — Exercícios Guiados (`exercicios/aula-06/guiados/`)
+
+| Onde (em `scaffolds/` e `resolucoes/`) | O que é | Referência em `exercises.md` |
+|---|---|---|
+| `registrar-foto.tsx` | "Escolher da galeria": `canceled`, `assets[0]`, prévia com `expo-image`, Concluir | Exercício 1 |
+| `galeria.tsx` | Seleção múltipla em `FlatList` de 3 colunas *(casa)* | Exercício 2 |
+| `foto-camera.tsx` | Câmera com negada/bloqueada distintas e galeria como saída *(casa - aparelho físico)* | Exercício 3 |
+| `_layout.tsx` | `Stack`, `Stack.Screen`, títulos e `headerTintColor` | Exercício 4 |
+| `sobre.tsx` | Tela de apoio `/sobre` para o Exercício 4 | Apoio Ex 4 |
+| `index.tsx` | Tela inicial para navegar entre os exercícios guiados no sandbox | Apoio Sandbox |
+
+Para demonstrar os guiados em um sandbox:
+```bash
+npx create-expo-app@latest sandbox-aula6
+cd sandbox-aula6
+npm run reset-project            # responda "n"
+npx expo install expo-image-picker expo-image
+# Copie os scaffolds (para fazer ao vivo) ou as resoluções (para demonstrar):
+cp ../habit-tracker-expo/exercicios/aula-06/guiados/resolucoes/*.tsx src/app/
+npx expo start
+```
+
+### Parte 2 — Atividades Aplicadas (`habit-tracker-expo`)
+
+Os arquivos com a estrutura e comentários `// TODO` estão prontos para desenvolvimento:
+
+| Arquivo | O que é | Atividade |
+|---|---|---|
+| `src/app/_layout.tsx` | Moldura com `Stack`, `headerTintColor: '#f26522'`, títulos das rotas | Atividade 1 e 2 |
+| `src/app/index.tsx` | Rota inicial apontando para `../screens/tela-habitos` com navegação | Atividade 1 |
+| `src/app/registrar-foto.tsx` | Contrato checklist no topo, galeria + câmera com 3 estados de falha e prévia | Atividade 1 |
+| `src/app/sobre.tsx` | Tela sobre com nome, versão e declaração de limitação técnica | Atividade 1 |
+| `src/app/galeria.tsx` | Galeria de até 6 fotos em grade com justificativa teórica do recorte | Atividade 2 |
+| `src/components/miniatura-foto.tsx` | Componente de miniatura da galeria (isolado fora de `src/app/`) | Atividade 2 |
+| `app.json` | Configuração de `scheme: "habittracker"` e plugin `expo-image-picker` com `TODO A2` e `TODO A3` | Atividade 1 |
+
+> ⚠️ **Limitação declarada das rotas (Restrições):**
+> A foto escolhida ou capturada em `/registrar-foto` (ou na `/galeria`) **não volta para a lista** — levar dados e estados entre diferentes telas é o conteúdo da Aula 7. Reconhecer e documentar essa fronteira faz parte da entrega da aula.
+
