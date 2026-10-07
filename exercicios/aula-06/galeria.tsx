@@ -1,4 +1,4 @@
-// Exercício 2 — RESOLUÇÃO: a galeria com seleção múltipla (casa)
+// Exercício 2 — RESOLUÇÃO: a galeria com seleção múltipla
 // Nível ⭐⭐ · 12 min
 //
 // No sandbox: src/app/galeria.tsx. Roda no simulador.
