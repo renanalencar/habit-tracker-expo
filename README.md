@@ -1,7 +1,7 @@
 # Habit Tracker Expo
 
 **Disciplina:** Desenvolvimento Mobile (2026.2.DM) — CESAR School
-**Branch:** `feature/01_aula_intro`
+**Branch:** `feature/aula_06_navigation`
 
 ## Sobre o projeto
 
@@ -353,18 +353,23 @@ npx expo start
 
 ### Parte 2 — Atividades Aplicadas (`habit-tracker-expo`)
 
-Os arquivos com a estrutura e comentários `// TODO` estão prontos para desenvolvimento:
+Implementação das atividades aplicadas da Aula 6:
 
 | Arquivo | O que é | Atividade |
 |---|---|---|
-| `src/app/_layout.tsx` | Moldura com `Stack`, `headerTintColor: '#f26522'`, títulos das rotas | Atividade 1 e 2 |
-| `src/app/index.tsx` | Rota inicial apontando para `../screens/tela-habitos` com navegação | Atividade 1 |
-| `src/app/registrar-foto.tsx` | Contrato checklist no topo, galeria + câmera com 3 estados de falha e prévia | Atividade 1 |
-| `src/app/sobre.tsx` | Tela sobre com nome, versão e declaração de limitação técnica | Atividade 1 |
-| `src/app/galeria.tsx` | Galeria de até 6 fotos em grade com justificativa teórica do recorte | Atividade 2 |
-| `src/components/miniatura-foto.tsx` | Componente de miniatura da galeria (isolado fora de `src/app/`) | Atividade 2 |
-| `app.json` | Configuração de `scheme: "habittracker"` e plugin `expo-image-picker` com `TODO A2` e `TODO A3` | Atividade 1 |
+| `src/app/_layout.tsx` | Navegação por abas com títulos e cor de destaque | Atividade 1 e 2 |
+| `src/app/index.tsx` | Rota inicial apontando para `../screens/tela-habitos` | Atividade 1 |
+| `src/app/registrar-foto.tsx` | Captura/seleção de foto, permissões, prévia e ação para concluir | Atividade 1 |
+| `src/app/sobre.tsx` | Nome, versão da aula e limitação técnica | Atividade 1 |
+| `src/app/galeria.tsx` | Seleção de até 6 fotos em grade, sem recorte | Atividade 2 |
+| `src/components/miniatura-foto.tsx` | Miniatura isolada fora de `src/app/` | Atividade 2 |
+| `app.json` | `scheme` e textos do plugin `expo-image-picker` | Atividade 1 |
+| `RELATORIO_USO_IA.md` | Relato e análise crítica do apoio de IA | Entrega |
 
-> ⚠️ **Limitação declarada das rotas (Restrições):**
-> A foto escolhida ou capturada em `/registrar-foto` (ou na `/galeria`) **não volta para a lista** — levar dados e estados entre diferentes telas é o conteúdo da Aula 7. Reconhecer e documentar essa fronteira faz parte da entrega da aula.
+O app usa abas para acessar hábitos, registro de foto, galeria e informações. A lista
+também oferece atalhos: a tela de registro é aberta por `router.push` e as demais rotas
+incluem `Link`.
 
+> **Limitação declarada:** a foto escolhida ou capturada em `/registrar-foto` (ou na
+> `/galeria`) não é associada a um hábito nem devolvida à lista. O compartilhamento de
+> dados e estados entre telas será desenvolvido na Aula 7.

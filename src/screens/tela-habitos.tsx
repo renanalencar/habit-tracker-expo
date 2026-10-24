@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { SectionList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, SectionList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Link, useRouter } from 'expo-router';
 
 import { BotaoAcao } from '../components/botao-acao';
 import { ItemHabito } from '../components/item-habito';
@@ -22,6 +23,7 @@ function Cabecalho({ busca, onBuscaChange }: { busca: string; onBuscaChange: (bu
 }
 
 export function TelaHabitos() {
+  const router = useRouter();
   const [habitos, setHabitos] = useState<Habito[]>(HABITOS);
   const [busca, setBusca] = useState('');
   const [atualizando, setAtualizando] = useState(false);
@@ -117,9 +119,24 @@ export function TelaHabitos() {
         contentContainerStyle={styles.conteudo}
       />
       <BotaoAcao rotulo="Novo hábito" onPressionar={() => setRegistrando(true)} />
-      {/* TODO A1 / A2: adicione aqui a navegação para as novas rotas:
-          - Link para '/sobre' e Link para '/galeria' (Atividade 2)
-          - router.push('/registrar-foto') ou Link para '/registrar-foto' */}
+      <View style={styles.atalhos}>
+        <Pressable
+          onPress={() => router.push('/registrar-foto')}
+          style={styles.atalho}
+        >
+          <Text style={styles.textoAtalho}>Registrar foto</Text>
+        </Pressable>
+        <Link href="/galeria" asChild>
+          <Pressable style={styles.atalho}>
+            <Text style={styles.textoAtalho}>Galeria</Text>
+          </Pressable>
+        </Link>
+        <Link href="/sobre" asChild>
+          <Pressable style={styles.atalho}>
+            <Text style={styles.textoAtalho}>Sobre</Text>
+          </Pressable>
+        </Link>
+      </View>
     </View>
   );
 }
@@ -147,4 +164,24 @@ const styles = StyleSheet.create({
   },
   separador: { height: espaco.sm },
   rodape: { padding: espaco.md, gap: espaco.sm },
+  atalhos: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingHorizontal: espaco.md,
+    paddingBottom: espaco.md,
+    gap: espaco.sm,
+  },
+  atalho: {
+    flex: 1,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: cores.primaria,
+    borderRadius: espaco.sm,
+    paddingVertical: espaco.sm,
+  },
+  textoAtalho: {
+    color: cores.primaria,
+    fontSize: 13,
+    fontWeight: '600',
+  },
 });
