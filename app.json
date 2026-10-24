@@ -51,8 +51,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "TODO A2: por que o app quer as fotos — pensando em quem vai ler",
-          "cameraPermission": "TODO A3: por que o app quer a câmera",
+          "photosPermission": "Permita escolher fotos para acompanhar visualmente o progresso dos seus hábitos.",
+          "cameraPermission": "Permita tirar uma foto para registrar visualmente o progresso de um hábito.",
           "microphonePermission": false
         }
       ]

@@ -1,5 +1,5 @@
-// GALERIA → PEDIR: ______________  LER: ______________  PARAR: ______________
-// CÂMERA  → PEDIR: ______________  LER: ______________  PARAR: ______________
+// GALERIA → PEDIR: nenhuma permissão prévia  LER: resultado da seleção  PARAR: ao concluir
+// CÂMERA  → PEDIR: permissão de câmera       LER: resultado da captura   PARAR: ao concluir
 //
 // Atividade 1 — Registrar Foto do Hábito (Galeria + Câmera)
 // Onde: src/app/registrar-foto.tsx
@@ -22,15 +22,18 @@ import { useRouter } from 'expo-router';
 type Falha = 'camera-negada' | 'camera-bloqueada';
 
 const MENSAGENS: Record<Falha, string> = {
-  // TODO A1.1: escreva duas mensagens distintas explicando o que o usuário pode fazer.
-  //           A bloqueada precisa indicar o caminho nas Configurações do aparelho.
-  //           Ambas devem lembrar que a galeria continua disponível.
-  'camera-negada': '',
-  'camera-bloqueada': '',
+  'camera-negada':
+    'A permissão da câmera foi negada. Você pode tentar novamente ou escolher uma foto da galeria.',
+  'camera-bloqueada':
+    'A permissão da câmera está bloqueada. Ative-a em Configurações > Aplicativos > Habit Tracker > Permissões. Você também pode escolher uma foto da galeria.',
 };
 
-// TODO A1.2: declare aqui as opções do picker (apenas imagens, recorte 4:3, qualidade 0.7),
-//           tipadas como ImagePicker.ImagePickerOptions, para reutilizar na câmera e na galeria.
+const OPCOES_PICKER: ImagePicker.ImagePickerOptions = {
+  mediaTypes: ['images'],
+  allowsEditing: true,
+  aspect: [4, 3],
+  quality: 0.7,
+};
 
 export default function TelaRegistrarFoto() {
   const router = useRouter();
@@ -40,26 +43,36 @@ export default function TelaRegistrarFoto() {
   async function tirarFoto() {
     setFalha(null);
 
-    // TODO A1.3: peça a permissão de câmera. Se não for concedida, defina a falha
-    //           usando canAskAgain ('camera-negada' vs 'camera-bloqueada') e encerre.
+    const permissao = await ImagePicker.requestCameraPermissionsAsync();
+    if (!permissao.granted) {
+      setFalha(permissao.canAskAgain ? 'camera-negada' : 'camera-bloqueada');
+      return;
+    }
 
-    // TODO A1.4: abra a câmera com as opções declaradas.
-    //           Se o usuário cancelou, não mostre erro e saia.
-    //           Se capturou, guarde o uri em fotoUri.
+    const resultado = await ImagePicker.launchCameraAsync(OPCOES_PICKER);
+    if (!resultado.canceled) {
+      setFotoUri(resultado.assets[0].uri);
+    }
   }
 
   async function escolherDaGaleria() {
     setFalha(null);
 
-    // TODO A1.5: abra a galeria com as mesmas opções (sem pedir permissão prévia).
-    //           Trate o cancelamento e guarde o uri da foto escolhida.
+    const resultado = await ImagePicker.launchImageLibraryAsync(OPCOES_PICKER);
+    if (!resultado.canceled) {
+      setFotoUri(resultado.assets[0].uri);
+    }
   }
 
   return (
     <View style={estilos.tela}>
       {fotoUri ? (
-        // TODO A1.6: mostre a prévia com expo-image, contentFit="cover" e transition de 300ms.
-        <View />
+        <Image
+          source={{ uri: fotoUri }}
+          style={estilos.previa}
+          contentFit="cover"
+          transition={300}
+        />
       ) : (
         <View style={[estilos.previa, estilos.semFoto]}>
           <Text>Nenhuma foto ainda</Text>
@@ -74,12 +87,12 @@ export default function TelaRegistrarFoto() {
         <Text style={estilos.textoBotaoSecundario}>Escolher da galeria</Text>
       </Pressable>
 
-      {/* TODO A1.7: mostre a mensagem de falha quando houver */}
+      {falha && <Text style={estilos.erro}>{MENSAGENS[falha]}</Text>}
 
       <Pressable
-        // TODO A1.8: ao tocar em Concluir, volte para a tela anterior via router.back().
-        //           O botão fica desabilitado (e com estilo desligado) enquanto não houver foto.
-        style={estilos.botao}
+        onPress={() => router.back()}
+        disabled={!fotoUri}
+        style={[estilos.botao, !fotoUri && estilos.desligado]}
       >
         <Text style={estilos.textoBotao}>Concluir</Text>
       </Pressable>
