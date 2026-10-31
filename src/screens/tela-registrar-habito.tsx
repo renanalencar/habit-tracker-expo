@@ -139,6 +139,14 @@ export function TelaRegistrarHabito({ onSalvar, onCancelar }: TelaRegistrarHabit
     <ScrollView style={estilos.tela} contentContainerStyle={estilos.conteudo}>
       <Text style={estilos.titulo}>Registrar hábito</Text>
 
+      <Pressable
+        onPress={onCancelar}
+        accessibilityRole="button"
+        style={({ pressed }) => [estilos.botaoVoltar, pressed && estilos.pressionado]}
+      >
+        <Text style={estilos.textoVoltar}>Voltar para a lista</Text>
+      </Pressable>
+
       <TextInput
         style={estilos.campo}
         placeholder="O que você fez? (ex.: Treino de perna)"
@@ -246,6 +254,14 @@ const estilos = StyleSheet.create({
   tela: { flex: 1, backgroundColor: cores.fundo },
   conteudo: { padding: espaco.md, gap: espaco.md, paddingBottom: espaco.lg * 2 },
   titulo: tipografia.titulo,
+  botaoVoltar: {
+    minHeight: 48,
+    justifyContent: 'center',
+    paddingHorizontal: espaco.md,
+    borderRadius: espaco.sm,
+    backgroundColor: cores.cartao,
+  },
+  textoVoltar: { color: cores.primaria, fontSize: 16, fontWeight: '700' },
   campo: {
     borderWidth: 1,
     borderColor: cores.textoFraco,

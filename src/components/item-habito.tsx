@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { CardHabito } from './CardHabito';
 import { cores, espaco, tipografia } from '../theme';
@@ -7,6 +7,7 @@ import { rotuloDoStatus } from '../utils/status-habito';
 
 export type ItemHabitoProps = {
   habito: Habito;
+  onAbrir: (id: string) => void;
   onAlternar: (id: string) => void;
   onRemover: (id: string) => void;
 };
@@ -25,60 +26,54 @@ function descrever(habito: Habito): string {
   return partes.join(', ');
 }
 
-export function ItemHabito({ habito, onAlternar, onRemover }: ItemHabitoProps) {
+export function ItemHabito({ habito, onAbrir, onAlternar, onRemover }: ItemHabitoProps) {
   return (
-    <Pressable
-      onPress={() => onAlternar(habito.id)}
-      onLongPress={() => onRemover(habito.id)}
-      accessibilityRole="button"
-      accessibilityLabel={descrever(habito)}
-      hitSlop={{
-        top: espaco.md,
-        bottom: espaco.md,
-        left: espaco.md,
-        right: espaco.md,
-      }}
-      unstable_pressDelay={300}
-      style={({ pressed }) => [
-        styles.item,
-        pressed && styles.itemPressionado,
-      ]}
-    >
-      {/* TODO 5.23: o <CardHabito> agora aceita `fotoUri`, `local` e `recyclingKey`.
-          Repasse os três a partir do `habito`.
-          O `recyclingKey` não é opcional por preguiça: sem ele, a célula reciclada pela
-          SectionList mostra a foto do item ANTERIOR durante a rolagem — o usuário vê a
-          foto errada ao lado do título certo.
-          Pense também se o `accessibilityLabel` ainda está completo depois disso. */}
-
-      {/* O `recyclingKey` não é opcional por preguiça: sem ele a célula reciclada pela
-          SectionList mostra a foto do item ANTERIOR durante a rolagem, e o usuário vê a
-          foto errada ao lado do título certo. */}
+    <View style={styles.item}>
       <CardHabito
         titulo={habito.titulo}
         categoria={habito.categoria}
         status={habito.status}
-        onPress={() => onAlternar(habito.id)}
+        onPress={() => onAbrir(habito.id)}
+        onLongPress={() => onRemover(habito.id)}
         destacado={habito.destacado}
         fotoUri={habito.fotoUri}
         local={habito.local}
         recyclingKey={habito.id}
       />
-    </Pressable>
+      <Pressable
+        onPress={() => onAlternar(habito.id)}
+        accessibilityRole="button"
+        accessibilityLabel={`${descrever(habito)}. Toque para ${
+          habito.status === 'concluido' ? 'marcar como pendente' : 'marcar como concluído'
+        }`}
+        style={({ pressed }) => [styles.botaoStatus, pressed && styles.botaoStatusPressionado]}
+      >
+        <Text style={styles.textoStatus}>
+          {habito.status === 'concluido' ? 'Marcar como pendente' : 'Marcar como concluído'}
+        </Text>
+      </Pressable>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: cores.cartao,
+    gap: espaco.sm,
+  },
+  botaoStatus: {
+    alignSelf: 'flex-end',
+    minHeight: 44,
+    justifyContent: 'center',
+    paddingHorizontal: espaco.md,
     borderRadius: espaco.sm,
-    padding: espaco.md,
-    gap: espaco.xs,
+    backgroundColor: `${cores.primaria}14`,
   },
-  itemPressionado: {
+  botaoStatusPressionado: {
     opacity: 0.9,
-    transform: [{ scale: 0.95 }],
   },
-  titulo: tipografia.corpo,
-  legenda: tipografia.legenda,
+  textoStatus: {
+    ...tipografia.legenda,
+    color: cores.primaria,
+    fontWeight: '700',
+  },
 });
