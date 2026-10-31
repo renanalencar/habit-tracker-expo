@@ -1,6 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useRouter } from 'expo-router';
-import { Pressable, SectionList, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Alert,
+  BackHandler,
+  Pressable,
+  SectionList,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+import * as Notifications from 'expo-notifications';
 
 import { BotaoAcao } from '../components/botao-acao';
 import { ItemHabito } from '../components/item-habito';
@@ -28,6 +38,18 @@ export function TelaHabitos() {
   const [busca, setBusca] = useState('');
   const [atualizando, setAtualizando] = useState(false);
   const [registrando, setRegistrando] = useState(false);
+  const [agendandoLembrete, setAgendandoLembrete] = useState(false);
+
+  useEffect(() => {
+    if (!registrando) return undefined;
+
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      setRegistrando(false);
+      return true;
+    });
+
+    return () => subscription.remove();
+  }, [registrando]);
 
   function alternar(id: string) {
     setHabitos((prev) =>
@@ -68,6 +90,57 @@ export function TelaHabitos() {
     setRegistrando(false);
   }
 
+  function abrirDetalhe(id: string) {
+    router.push({ pathname: '/habit/[id]', params: { id } });
+  }
+
+  async function agendarLembrete() {
+    if (agendandoLembrete) return;
+
+    setAgendandoLembrete(true);
+    try {
+      const permissaoAtual = await Notifications.getPermissionsAsync();
+      const permissao =
+        permissaoAtual.status === 'granted'
+          ? permissaoAtual
+          : await Notifications.requestPermissionsAsync();
+
+      if (permissao.status !== 'granted') {
+        Alert.alert(
+          'Permissão necessária',
+          'Ative as notificações deste aplicativo nas configurações do dispositivo e tente novamente.'
+        );
+        return;
+      }
+
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: 'Hora do seu hábito!',
+          body: 'Vamos manter a rotina de meditação por 10 minutos.',
+          data: { habitId: 'h5' },
+          sound: 'default',
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: 5,
+        },
+      });
+
+      Alert.alert(
+        'Lembrete agendado',
+        'Uma notificação local aparecerá em 5 segundos. Deixe o app em segundo plano para testá-la.'
+      );
+    } catch (error) {
+      console.error('Não foi possível agendar o lembrete do hábito.', error);
+      Alert.alert(
+        'Não foi possível agendar',
+        error instanceof Error ? error.message : 'O sistema não conseguiu agendar o lembrete.'
+      );
+    } finally {
+      setAgendandoLembrete(false);
+    }
+  }
+
   const secoes = agrupar(filtrarPorTitulo(habitos, busca));
 
   if (registrando) {
@@ -78,11 +151,28 @@ export function TelaHabitos() {
 
   return (
     <View style={styles.tela}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityState={{ disabled: agendandoLembrete }}
+        disabled={agendandoLembrete}
+        onPress={agendarLembrete}
+        style={({ pressed }) => [
+          styles.botaoLembrete,
+          pressed && styles.botaoPressionado,
+          agendandoLembrete && styles.botaoDesativado,
+        ]}
+      >
+        <Text style={styles.textoBotaoLembrete}>
+          {agendandoLembrete ? 'Agendando lembrete…' : 'Agendar lembrete em 5s'}
+        </Text>
+      </Pressable>
+
       <SectionList
         sections={secoes}
         renderItem={({ item }) => (
           <ItemHabito
             habito={item}
+            onAbrir={abrirDetalhe}
             onAlternar={alternar}
             onRemover={remover}
           />
@@ -115,7 +205,7 @@ export function TelaHabitos() {
           </Pressable>
         </Link>
 
-        <Link href="/sobre" style={styles.linkSobre}>
+        <Link href="/about" style={styles.linkSobre}>
           Sobre o app
         </Link>
       </View>
@@ -127,6 +217,18 @@ export default TelaHabitos;
 
 const styles = StyleSheet.create({
   tela: { flex: 1, backgroundColor: cores.fundo, borderRadius: espaco.lg },
+  botaoLembrete: {
+    minHeight: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: espaco.md,
+    marginTop: espaco.sm,
+    paddingHorizontal: espaco.md,
+    borderRadius: espaco.sm,
+    backgroundColor: '#f26522',
+  },
+  textoBotaoLembrete: { color: '#fff', fontWeight: '700', fontSize: 16 },
+  botaoDesativado: { opacity: 0.65 },
   conteudo: { padding: espaco.md, paddingBottom: espaco.lg },
   busca: {
     borderWidth: 1,

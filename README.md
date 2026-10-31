@@ -396,6 +396,13 @@ Resoluções das Partes 1 e 2 da Aula 7 (**Navegação avançada com Expo Router
 | `src/app/habit/[id].tsx` | Rota dinâmica de detalhe do hábito com `useLocalSearchParams<{ id: string }>()`, exibição de `Hábito ID: {id}` e retorno à lista |
 | `src/app/about.tsx` | Tela Sobre acessível pelo menu lateral (Drawer) |
 | `src/app/settings.tsx` | Tela de Configurações acessível pelo menu lateral (Drawer) |
-| `src/screens/tela-habitos.tsx` | Integração de notificações locais (`setNotificationHandler`, permissão, listeners imprimindo `"Notificação recebida"` e `"Notificação tocada"`, agendamento para 5s e navegação automática ao tocar na notificação ou em um hábito da lista) |
+| `src/screens/tela-habitos.tsx` | Permissão e agendamento de lembretes locais para 5s; tocar em um hábito abre seu detalhe e o botão separado mantém a ação de concluir |
+| `src/app/_layout.tsx` | Handler de notificações em foreground, listeners de recebimento/toque e navegação ao detalhe do hábito associado |
+| `src/app/habit/_layout.tsx` | Pilha de detalhes com retorno automático à tela anterior |
 
+### Problemas observados no teste em aparelho e correções
 
+- **O botão Voltar nativo do Android mostrava um detalhe anterior (por exemplo, h1) antes da Home:** cada abertura de `/habit/[id]` pode deixar outra instância de detalhe na pilha aninhada. O detalhe agora intercepta o botão físico Voltar enquanto está em foco e navega diretamente para `/(tabs)`, sem desempilhar outro hábito primeiro. O botão **“Voltar para a lista”** usa o mesmo fluxo.
+- **Ao abrir “Novo hábito”, não havia retorno pela tecla física do Android:** o formulário é exibido por um estado (`registrando`) dentro da aba Home, não como uma rota da pilha; portanto, o botão Voltar nativo não tinha uma tela anterior para desempilhar. Eu havia testado o retorno do detalhe, mas deixado passar o fluxo de criação. A aba agora captura o Voltar do Android enquanto o formulário está aberto, e o formulário oferece também **“Voltar para a lista”** no topo, sem exigir rolagem até Cancelar.
+- **O lembrete falhava no Android/Expo Go:** o log mostrou `ExpoNotificationChannelManager.setNotificationChannelAsync` rejeitado com `NullPointerException` (`Object.getClass()` em uma referência nula). A exceção ocorria antes da permissão e do agendamento. Como o canal é opcional para uma notificação local, removemos essa chamada e o `channelId` explícito; o Android/Expo Go usa o canal padrão. O agendamento e a permissão continuam mostrando erros explícitos caso o sistema os rejeite.
+- **Título genérico `[id]` na barra da tela de detalhe:** a pilha agora define o título **“Detalhes do hábito”** para a rota dinâmica.

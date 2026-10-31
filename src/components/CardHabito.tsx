@@ -11,6 +11,7 @@ import { cores, espaco, tipografia } from '../theme';
 
 export type CardHabitoProps = Pick<Habito, 'titulo' | 'categoria' | 'status'> & {
   onPress: () => void;
+  onLongPress?: () => void;
   destacado?: boolean;
   // Aula 5 — os dois novos campos do domínio. Opcionais aqui pelo mesmo motivo que são
   // opcionais no tipo: o usuário pode ter negado a câmera, o GPS, ou os dois.
@@ -25,13 +26,19 @@ export function CardHabito({
   categoria,
   status,
   onPress,
+  onLongPress,
   destacado = false,
   fotoUri,
   local,
   recyclingKey,
 }: CardHabitoProps) {
   return (
-    <Pressable onPress={onPress} style={[styles.card, destacado && styles.destaque]}>
+    <Pressable
+      onPress={onPress}
+      onLongPress={onLongPress}
+      accessibilityRole="button"
+      style={[styles.card, destacado && styles.destaque]}
+    >
       {fotoUri ? (
         <Image
           source={{ uri: fotoUri }}
