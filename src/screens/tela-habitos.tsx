@@ -1,8 +1,8 @@
 // Atividade Aplicada (Requisito 3) — Aba Home conectada ao useHabitStore e useTheme
 // Onde: src/screens/tela-habitos.tsx (rota: src/app/(tabs)/index.tsx)
 
-import { useEffect, useState } from 'react';
-import { Link, useRouter } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'expo-router';
 import { requestPermissionsAsync } from 'expo-notifications/build/NotificationPermissions';
 import {
   addNotificationReceivedListener,
@@ -37,24 +37,18 @@ setNotificationHandler({
 export function TelaHabitos() {
   const router = useRouter();
   const [novoHabitoTexto, setNovoHabitoTexto] = useState('');
-  const [permissionGranted, setPermissionGranted] = useState(false);
+  const permissionGranted = useRef(false);
 
-  // TODO Atividade Aplicada 3.1: Consumir isDark de useTheme() e habits, addHabit, toggleHabit, removeHabit de useHabitStore
   const { isDark } = useTheme();
   const habits = useHabitStore((s) => s.habits);
   const addHabit = useHabitStore((s) => s.addHabit);
   const toggleHabit = useHabitStore((s) => s.toggleHabit);
   const removeHabit = useHabitStore((s) => s.removeHabit);
 
-  void isDark;
-  void addHabit;
-  void toggleHabit;
-  void removeHabit;
-
   useEffect(() => {
     async function requestPermission() {
       const { status } = await requestPermissionsAsync();
-      setPermissionGranted(status === 'granted');
+      permissionGranted.current = status === 'granted';
     }
 
     requestPermission();
@@ -95,13 +89,13 @@ export function TelaHabitos() {
   }, [router]);
 
   async function agendarLembrete() {
-    if (!permissionGranted) {
+    if (!permissionGranted.current) {
       const { status } = await requestPermissionsAsync();
       if (status !== 'granted') {
         console.log('Permissão não concedida');
         return;
       }
-      setPermissionGranted(true);
+      permissionGranted.current = true;
     }
 
     await scheduleNotificationAsync({
@@ -119,7 +113,8 @@ export function TelaHabitos() {
 
   function handleAdicionarHabito() {
     if (!novoHabitoTexto.trim()) return;
-    // TODO Atividade Aplicada 3.2: Chamar addHabit(novoHabitoTexto) e limpar o input local
+    addHabit(novoHabitoTexto);
+    setNovoHabitoTexto('');
   }
 
   function abrirDetalhe(id: string) {
@@ -130,17 +125,29 @@ export function TelaHabitos() {
   }
 
   return (
-    <View style={styles.tela}>
+    <View style={[styles.tela, isDark && styles.telaEscura]}>
       <View style={styles.conteudo}>
         <View style={styles.linhaInput}>
           <TextInput
-            style={styles.input}
+            style={[styles.input, isDark && styles.inputEscuro]}
             placeholder="Novo hábito..."
+            placeholderTextColor={isDark ? '#B0B0B0' : cores.textoFraco}
             value={novoHabitoTexto}
             onChangeText={setNovoHabitoTexto}
+            onSubmitEditing={handleAdicionarHabito}
+            returnKeyType="done"
           />
-          <Pressable style={styles.botaoAdicionar} onPress={handleAdicionarHabito}>
-            <Text style={styles.textoBotaoAdicionar}>+</Text>
+          <Pressable
+            style={({ pressed }) => [
+              styles.botaoAdicionar,
+              pressed && styles.botaoPressionado,
+            ]}
+            onPress={handleAdicionarHabito}
+            hitSlop={8}
+            accessibilityRole="button"
+            accessibilityLabel="Adicionar hábito"
+          >
+            <Text style={styles.textoBotaoAdicionar}>+ Adicionar</Text>
           </Pressable>
         </View>
 
@@ -149,17 +156,34 @@ export function TelaHabitos() {
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={() => <View style={styles.separador} />}
           renderItem={({ item }) => (
-            <View style={styles.card}>
-              {/* TODO Atividade Aplicada 3.3: Tocar no checkbox chama toggleHabit(item.id) */}
-              <Pressable onPress={() => {}} style={styles.checkbox}>
+            <View style={[styles.card, isDark && styles.cardEscuro]}>
+              <Pressable
+                onPress={() => toggleHabit(item.id)}
+                style={styles.checkbox}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: item.done }}
+                accessibilityLabel={`Marcar ${item.title} como ${item.done ? 'pendente' : 'concluído'}`}
+              >
                 <Text style={styles.checkboxTexto}>{item.done ? '✅' : '⬜'}</Text>
               </Pressable>
 
-              {/* TODO Atividade Aplicada 3.4: Tocar no título navega para /habit/[id] */}
               <Pressable onPress={() => abrirDetalhe(item.id)} style={styles.cardTitulo}>
-                <Text style={[styles.tituloHabito, item.done && styles.tituloConcluido]}>
+                <Text
+                  style={[
+                    styles.tituloHabito,
+                    isDark && styles.textoEscuro,
+                    item.done && styles.tituloConcluido,
+                  ]}
+                >
                   {item.title}
                 </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => removeHabit(item.id)}
+                accessibilityRole="button"
+                accessibilityLabel={`Excluir ${item.title}`}
+              >
+                <Text style={styles.textoExcluir}>Excluir</Text>
               </Pressable>
             </View>
           )}
@@ -174,9 +198,6 @@ export function TelaHabitos() {
           <Text style={styles.textoBotaoRota}>Agendar notificação em 5s</Text>
         </Pressable>
 
-        <Link href="/about" style={styles.linkSobre}>
-          Sobre o app
-        </Link>
       </View>
     </View>
   );
@@ -186,6 +207,7 @@ export default TelaHabitos;
 
 const styles = StyleSheet.create({
   tela: { flex: 1, backgroundColor: cores.fundo },
+  telaEscura: { backgroundColor: '#121212' },
   conteudo: { flex: 1, padding: espaco.md },
   linhaInput: { flexDirection: 'row', gap: espaco.sm, marginBottom: espaco.md },
   input: {
@@ -198,14 +220,16 @@ const styles = StyleSheet.create({
     backgroundColor: cores.cartao,
     fontSize: 16,
   },
+  inputEscuro: { backgroundColor: '#242424', color: '#F5F5F5', borderColor: '#666' },
   botaoAdicionar: {
     backgroundColor: '#FF6002',
-    paddingHorizontal: 18,
+    paddingHorizontal: 14,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: espaco.sm,
+    minHeight: 48,
   },
-  textoBotaoAdicionar: { color: '#fff', fontSize: 22, fontWeight: '700' },
+  textoBotaoAdicionar: { color: '#fff', fontSize: 16, fontWeight: '700' },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -214,11 +238,14 @@ const styles = StyleSheet.create({
     borderRadius: espaco.sm,
     gap: espaco.sm,
   },
+  cardEscuro: { backgroundColor: '#242424' },
   checkbox: { padding: 4 },
   checkboxTexto: { fontSize: 18 },
   cardTitulo: { flex: 1 },
   tituloHabito: { fontSize: 16, fontWeight: '600', color: cores.texto },
+  textoEscuro: { color: '#F5F5F5' },
   tituloConcluido: { textDecorationLine: 'line-through', color: cores.textoFraco },
+  textoExcluir: { color: '#FF8A80', fontWeight: '600', padding: 4 },
   separador: { height: espaco.sm },
   rodape: { padding: espaco.md, gap: espaco.sm },
   botaoNotificacao: {
@@ -234,12 +261,5 @@ const styles = StyleSheet.create({
   },
   botaoPressionado: {
     opacity: 0.7,
-  },
-  linkSobre: {
-    fontSize: 16,
-    color: '#FF6002',
-    textDecorationLine: 'underline',
-    textAlign: 'center',
-    paddingVertical: 4,
   },
 });

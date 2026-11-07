@@ -5,20 +5,24 @@ import { StyleSheet, Switch, Text, View } from 'react-native';
 import { useTheme } from '../context/theme-context';
 
 export function TelaConfiguracoes() {
-  // TODO Ex 3.5: Consumir { isDark, toggleTheme } de useTheme()
   const { isDark, toggleTheme } = useTheme();
-  void isDark;
-  void toggleTheme;
 
   return (
-    // TODO Ex 3.6: Alterar backgroundColor e cor do texto conforme isDark e ligar o <Switch> a isDark e toggleTheme
-    <View style={styles.container}>
-      <Text style={styles.titulo}>Configurações</Text>
-      <Text style={styles.texto}>Gerencie preferências e o tema do aplicativo.</Text>
+    <View style={[styles.container, isDark && styles.containerEscuro]}>
+      <Text style={[styles.titulo, isDark && styles.textoEscuro]}>Configurações</Text>
+      <Text style={[styles.texto, isDark && styles.textoEscuro]}>
+        Gerencie preferências e o tema do aplicativo.
+      </Text>
 
-      <View style={styles.linhaTema}>
-        <Text style={styles.rotulo}>Modo Escuro</Text>
-        <Switch value={false} onValueChange={() => {}} />
+      <View style={[styles.linhaTema, isDark && styles.linhaTemaEscura]}>
+        <Text style={[styles.rotulo, isDark && styles.textoEscuro]}>Modo Escuro</Text>
+        <Switch
+          value={isDark}
+          onValueChange={toggleTheme}
+          accessibilityLabel="Ativar modo escuro"
+          trackColor={{ false: '#767577', true: '#FF6002' }}
+          thumbColor={isDark ? '#fff' : undefined}
+        />
       </View>
     </View>
   );
@@ -28,8 +32,10 @@ export default TelaConfiguracoes;
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 16, padding: 24 },
+  containerEscuro: { backgroundColor: '#121212' },
   titulo: { fontSize: 20, fontWeight: '700' },
   texto: { fontSize: 16, color: '#555', textAlign: 'center' },
+  textoEscuro: { color: '#F5F5F5' },
   linhaTema: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -41,5 +47,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
   },
+  linhaTemaEscura: { borderColor: '#555' },
   rotulo: { fontSize: 16, fontWeight: '600' },
 });

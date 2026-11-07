@@ -3,20 +3,26 @@
 
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTheme } from '../context/theme-context';
 
 export default function FocusTimer() {
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const { isDark } = useTheme();
 
   useEffect(() => {
-    // TODO Ex 2.1: Se não estiver rodando (!isRunning), sair cedo
-    // TODO Ex 2.2: Criar setInterval de 1000ms incrementando 'seconds' com prev => prev + 1
-    // TODO Ex 2.3: Retornar função de cleanup com clearInterval(intervalId)
-  }, [/* TODO Ex 2.4: Dependências */]);
+    if (!isRunning) return;
+
+    const intervalId = setInterval(() => {
+      setSeconds((prev) => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [isRunning]);
 
   return (
-    <View style={styles.box}>
-      <Text style={styles.timer}>{seconds}s</Text>
+    <View style={[styles.box, isDark && styles.boxEscuro]}>
+      <Text style={[styles.timer, isDark && styles.textoEscuro]}>{seconds}s</Text>
       <View style={styles.actions}>
         <Pressable
           style={styles.button}
@@ -40,7 +46,9 @@ export default function FocusTimer() {
 
 const styles = StyleSheet.create({
   box: { padding: 20, alignItems: 'center', borderRadius: 12, backgroundColor: '#F3E9DC' },
+  boxEscuro: { backgroundColor: '#303030' },
   timer: { fontSize: 36, fontWeight: 'bold', marginBottom: 16 },
+  textoEscuro: { color: '#F5F5F5' },
   actions: { flexDirection: 'row', gap: 12 },
   button: { backgroundColor: '#FF6002', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 8 },
   resetButton: { backgroundColor: '#555' },

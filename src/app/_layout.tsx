@@ -3,13 +3,38 @@
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { Drawer } from 'expo-router/drawer';
-import { ThemeProvider } from '../context/theme-context';
+import { StatusBar } from 'expo-status-bar';
+import { ThemeProvider, useTheme } from '../context/theme-context';
 
 export default function RootLayout() {
-  // TODO Atividade Aplicada (Requisito 1): Envolver o navegador raiz com <ThemeProvider>
   return (
     <ThemeProvider>
-      <Drawer backBehavior="history" screenOptions={{ drawerActiveTintColor: '#FF6002' }}>
+      <RootNavigator />
+    </ThemeProvider>
+  );
+}
+
+function RootNavigator() {
+  const { isDark } = useTheme();
+  const backgroundColor = isDark ? '#121212' : '#FFFFFF';
+  const textColor = isDark ? '#F5F5F5' : '#1A1A1A';
+
+  return (
+    <>
+      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <Drawer
+        backBehavior="history"
+        screenOptions={{
+          drawerActiveTintColor: '#FF6002',
+          drawerInactiveTintColor: isDark ? '#B0B0B0' : '#555555',
+          drawerStyle: { backgroundColor },
+          sceneStyle: { backgroundColor },
+          headerStyle: { backgroundColor },
+          headerTintColor: textColor,
+          headerTitleStyle: { color: textColor },
+          drawerLabelStyle: { color: textColor },
+        }}
+      >
         <Drawer.Screen
           name="(tabs)"
           options={{
@@ -79,6 +104,6 @@ export default function RootLayout() {
           }}
         />
       </Drawer>
-    </ThemeProvider>
+    </>
   );
 }

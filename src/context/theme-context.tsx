@@ -3,7 +3,14 @@
 // Onde: src/context/theme-context.tsx
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createContext, useContext, useEffect, useState, type PropsWithChildren } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type PropsWithChildren,
+} from 'react';
 
 type ThemeContextType = {
   isDark: boolean;
@@ -12,26 +19,55 @@ type ThemeContextType = {
 
 const THEME_STORAGE_KEY = '@habits:theme';
 
-// TODO Ex 3.1: Criar ThemeContext com createContext<ThemeContextType | undefined>(undefined)
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: PropsWithChildren) {
-  // TODO Ex 3.2: Criar estado isDark (useState(false)) e função toggleTheme
   const [isDark, setIsDark] = useState(false);
+  const [themeLoaded, setThemeLoaded] = useState(false);
+  const changedWhileLoading = useRef(false);
 
   useEffect(() => {
-    // TODO Atividade Aplicada 1.1: Carregar a preferência de tema salva com AsyncStorage.getItem(THEME_STORAGE_KEY)
-    void AsyncStorage;
-    void THEME_STORAGE_KEY;
+    let active = true;
+
+    async function loadTheme() {
+      try {
+        const savedTheme = await AsyncStorage.getItem(THEME_STORAGE_KEY);
+        if (!active) return;
+
+        if (savedTheme !== null && !changedWhileLoading.current) {
+          const parsedTheme: unknown = JSON.parse(savedTheme);
+          if (typeof parsedTheme !== 'boolean') {
+            throw new TypeError('A preferência de tema salva não é um booleano.');
+          }
+          setIsDark(parsedTheme);
+        }
+      } catch (error) {
+        console.error('Não foi possível carregar a preferência de tema.', error);
+      } finally {
+        if (active) setThemeLoaded(true);
+      }
+    }
+
+    void loadTheme();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
+  useEffect(() => {
+    if (!themeLoaded) return;
+
+    AsyncStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(isDark)).catch((error: unknown) => {
+      console.error('Não foi possível salvar a preferência de tema.', error);
+    });
+  }, [isDark, themeLoaded]);
+
   const toggleTheme = () => {
-    // TODO Ex 3.2 / Atividade Aplicada 1.2: Alternar isDark com atualização funcional (prev => !prev)
-    // e salvar a nova preferência no disco com AsyncStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(nextValue))
-    void setIsDark;
+    if (!themeLoaded) changedWhileLoading.current = true;
+    setIsDark((prev) => !prev);
   };
 
-  // TODO Ex 3.3: Retornar <ThemeContext.Provider value={{ isDark, toggleTheme }}>{children}</ThemeContext.Provider>
   return (
     <ThemeContext.Provider value={{ isDark, toggleTheme }}>
       {children}
@@ -40,10 +76,9 @@ export function ThemeProvider({ children }: PropsWithChildren) {
 }
 
 export function useTheme(): ThemeContextType {
-  // TODO Ex 3.4: Ler contexto com useContext(ThemeContext) e lançar erro se usado fora do ThemeProvider
   const context = useContext(ThemeContext);
   if (!context) {
-    return { isDark: false, toggleTheme: () => {} };
+    throw new Error('useTheme deve ser usado dentro de um ThemeProvider.');
   }
   return context;
 }

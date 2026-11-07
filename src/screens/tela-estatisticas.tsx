@@ -6,31 +6,37 @@ import { useTheme } from '../context/theme-context';
 import { useHabitStore } from '../store/use-habit-store';
 
 export function TelaEstatisticas() {
-  // TODO Ex 4.4: Consumir 'habits' via seletor useHabitStore((state) => state.habits)
   const habits = useHabitStore((state) => state.habits);
   const { isDark, toggleTheme } = useTheme();
-  void habits;
-  void isDark;
-  void toggleTheme;
 
-  // TODO Ex 4.5 / Atividade Aplicada 4.1: Calcular total de hábitos, concluídos, pendentes e porcentagem de conclusão
-  const total = 0;
-  const completed = 0;
-  const pending = 0;
-  const percentage = 0;
+  const total = habits.length;
+  const completed = habits.filter((habit) => habit.done).length;
+  const pending = total - completed;
+  const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
 
   return (
-    // TODO Atividade Aplicada 4.2: Aplicar cores de tema (isDark) e conectar o Switch ao toggleTheme
-    <View style={styles.container}>
-      <Text style={styles.titulo}>Estatísticas</Text>
-      <Text style={styles.texto}>Total de hábitos: {total}</Text>
-      <Text style={styles.texto}>Concluídos: {completed}</Text>
-      <Text style={styles.texto}>Pendentes: {pending}</Text>
+    <View style={[styles.container, isDark && styles.containerEscuro]}>
+      <Text style={[styles.titulo, isDark && styles.textoEscuro]}>Estatísticas</Text>
+      <Text style={[styles.texto, isDark && styles.textoEscuro]}>
+        Total de hábitos: {total}
+      </Text>
+      <Text style={[styles.texto, isDark && styles.textoEscuro]}>
+        Concluídos: {completed}
+      </Text>
+      <Text style={[styles.texto, isDark && styles.textoEscuro]}>
+        Pendentes: {pending}
+      </Text>
       <Text style={styles.destaque}>Progresso: {percentage}%</Text>
 
-      <View style={styles.linhaTema}>
-        <Text style={styles.texto}>Modo Escuro</Text>
-        <Switch value={false} onValueChange={() => {}} />
+      <View style={[styles.linhaTema, isDark && styles.linhaTemaEscura]}>
+        <Text style={[styles.texto, isDark && styles.textoEscuro]}>Modo Escuro</Text>
+        <Switch
+          value={isDark}
+          onValueChange={toggleTheme}
+          accessibilityLabel="Ativar modo escuro"
+          trackColor={{ false: '#767577', true: '#FF6002' }}
+          thumbColor={isDark ? '#fff' : undefined}
+        />
       </View>
     </View>
   );
@@ -40,8 +46,10 @@ export default TelaEstatisticas;
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 10, padding: 24 },
+  containerEscuro: { backgroundColor: '#121212' },
   titulo: { fontSize: 22, fontWeight: '700', marginBottom: 8 },
   texto: { fontSize: 16, color: '#555' },
+  textoEscuro: { color: '#F5F5F5' },
   destaque: { fontSize: 18, fontWeight: '700', color: '#FF6002', marginTop: 4 },
   linhaTema: {
     flexDirection: 'row',
@@ -54,4 +62,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
   },
+  linhaTemaEscura: { borderColor: '#555' },
 });
